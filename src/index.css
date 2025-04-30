@@ -1,0 +1,10 @@
+:root {
+    --font-family: "Poppins", sans-serif;
+    --second-family: "Roboto", sans-serif;
+    --third-family: "Raleway", sans-serif;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+}
