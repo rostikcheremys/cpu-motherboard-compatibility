@@ -1,25 +1,23 @@
-import "./SearchSelect.css";
-
 import React from 'react';
-
 import TextField from '@mui/material/TextField';
 import Autocomplete from '@mui/material/Autocomplete';
+import './SearchSelect.css';
 
-const options = [
-    { label: 'Київ', id: 1 },
-    { label: 'Львів', id: 2 },
-    { label: 'Одеса', id: 3 },
-];
+export const SearchSelect = ({ options, onSelect }) => {
+    const handleChange = (event, newValue) => {
+        onSelect(newValue);
+    };
 
-export const SearchSelect = () => {
     return (
         <div className="search-select">
             <Autocomplete
                 options={options}
-                getOptionLabel={(option) => option.label}
+                getOptionLabel={(option) => option.name}
+                onChange={handleChange}
                 renderInput={(params) =>
-                    <TextField {...params} variant="outlined" />}
+                    <TextField {...params} variant="outlined" />
+                }
             />
         </div>
     );
-}
+};
