@@ -1,20 +1,18 @@
-import React, { useState, useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { SearchSelect } from "../SearchSelect/SearchSelect.jsx";
 import "./CompatibilityCheck.css";
 
-export const CompatibilityCheck = () => {
+export const CompatibilityCheck = ({ setSelectedCpu, setSelectedMotherboard }) => {
     const [cpuOptions, setCpuOptions] = useState([]);
     const [motherboardOptions, setMotherboardOptions] = useState([]);
-    const [selectedCpu, setSelectedCpu] = useState(null);
-    const [selectedMotherboard, setSelectedMotherboard] = useState(null);
 
     useEffect(() => {
-        fetch('http://localhost:3001/api/cpu')
+        fetch('http://localhost:3001/api/cpus')
             .then((response) => response.json())
             .then((data) => setCpuOptions(data))
             .catch((error) => console.error('Error fetching CPUs:', error));
 
-        fetch('http://localhost:3001/api/motherboard')
+        fetch('http://localhost:3001/api/motherboards')
             .then((response) => response.json())
             .then((data) => setMotherboardOptions(data))
             .catch((error) => console.error('Error fetching Motherboards:', error));
@@ -28,14 +26,6 @@ export const CompatibilityCheck = () => {
     const handleMotherboardSelect = (motherboard) => {
         setSelectedMotherboard(motherboard);
         console.log('Вибрана материнська плата:', motherboard);
-    };
-
-    const checkCompatibility = () => {
-        if (selectedCpu && selectedMotherboard) {
-            console.log(`Перевірка сумісності між ${selectedCpu.name} та ${selectedMotherboard.name}`);
-        } else {
-            console.log('Будь ласка, виберіть процесор та материнську плату для перевірки сумісності.');
-        }
     };
 
     return (
@@ -62,8 +52,6 @@ export const CompatibilityCheck = () => {
                         />
                     </div>
                 </div>
-
-                <button onClick={checkCompatibility}>Check Compatibility</button>
             </div>
         </div>
     );
