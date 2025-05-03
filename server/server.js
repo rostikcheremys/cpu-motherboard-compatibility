@@ -19,14 +19,31 @@ app.get('/api/cpus', async (req, res) => {
 app.get('/api/motherboards', async (req, res) => {
     try {
         const result = await pool.query('SELECT id, name FROM motherboards');
-        res.json(result.rows); // Повертаємо рядки результату
+        res.json(result.rows);
     } catch (err) {
         console.error(err);
         res.status(500).json({ error: 'Database error' });
     }
 });
 
-app.get('/api/compatibility', async (req, res) => {
+app.get('/api/motherboards/compatible/:cpuId', async (req, res) => {
+    const { cpuId } = req.params;
+    try {
+        const result = await pool.query(
+            'SELECT m.id, m.name FROM motherboards m ' +
+            'JOIN compatibility c ON m.id = c.motherboard_id ' +
+            'WHERE c.cpu_id = $1',
+            [cpuId]
+        );
+        res.json(result.rows);
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({ error: 'Database error' });
+    }
+});
+
+
+/*app.get('/api/compatibility', async (req, res) => {
     const query = `
         SELECT 
             cpus.id AS cpu_id,
@@ -65,7 +82,7 @@ app.get('/api/compatibility', async (req, res) => {
         console.error(err);
         res.status(500).send('Server error');
     }
-});
+});*/
 
 app.listen(5001, () => {
     console.log('Server is running on port 5001');
