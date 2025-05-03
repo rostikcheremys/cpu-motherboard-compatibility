@@ -23,6 +23,7 @@ export const CompatibilityCheck = ({ setSelectedCpu, setSelectedMotherboard }) =
                 .catch((error) => console.error('Error fetching compatible motherboards:', error));
         } else {
             setMotherboardOptions([]);
+            setIsHovered(false);
         }
     }, [selectedCpu]);
 
@@ -56,12 +57,15 @@ export const CompatibilityCheck = ({ setSelectedCpu, setSelectedMotherboard }) =
                         />
                     </div>
 
-                    <div className="сompatibility-сheck__select" onMouseEnter={() => setIsHovered(true)}
-                         onMouseLeave={() => setIsHovered(false)}>
+                    <div className="сompatibility-сheck__select"
+                         onMouseEnter={() => setIsHovered(true)}
+                         onMouseLeave={() => setIsHovered(false)}
+                    >
                         <span className="сompatibility-сheck__hint">
                             {selectedCpu === null && isHovered
                                 ? "Choose a processor before selecting a motherboard!"
-                                : "Select motherboard:"}
+                                : "Select motherboard:"
+                            }
                         </span>
                         <SearchSelect
                             options={motherboardOptions}

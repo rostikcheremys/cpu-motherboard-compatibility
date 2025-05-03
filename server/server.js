@@ -11,8 +11,8 @@ app.get('/api/cpus', async (req, res) => {
         const result = await pool.query('SELECT id, name FROM cpus');
         res.json(result.rows);
     } catch (err) {
-        console.error(err);
-        res.status(500).json({ error: 'Database error' });
+        console.error('Error fetching CPUs:', err.stack);
+        res.status(500).json({ error: 'Database error', details: err.message });
     }
 });
 
@@ -21,13 +21,16 @@ app.get('/api/motherboards', async (req, res) => {
         const result = await pool.query('SELECT id, name FROM motherboards');
         res.json(result.rows);
     } catch (err) {
-        console.error(err);
-        res.status(500).json({ error: 'Database error' });
+        console.error('Error fetching motherboards:', err.stack);
+        res.status(500).json({ error: 'Database error', details: err.message });
     }
 });
 
 app.get('/api/motherboards/compatible/:cpuId', async (req, res) => {
     const { cpuId } = req.params;
+    if (!cpuId || cpuId === 'undefined') {
+        return res.status(400).json({ error: 'Invalid CPU ID' });
+    }
     try {
         const result = await pool.query(
             'SELECT m.id, m.name FROM motherboards m ' +
@@ -37,52 +40,63 @@ app.get('/api/motherboards/compatible/:cpuId', async (req, res) => {
         );
         res.json(result.rows);
     } catch (err) {
-        console.error(err);
-        res.status(500).json({ error: 'Database error' });
+        console.error('Error fetching compatible motherboards:', err.stack);
+        res.status(500).json({ error: 'Database error', details: err.message });
     }
 });
 
-
-/*app.get('/api/compatibility', async (req, res) => {
-    const query = `
-        SELECT 
-            cpus.id AS cpu_id,
-            cpus.name AS cpu_name,
-            cpu_generation.name AS cpu_generation,
-            socket.name AS cpu_socket,
-            cpu_manufacturer.name AS cpu_manufacturer,
-            cpu_memory_type.name AS cpu_memory_type,
-
-            motherboards.id AS motherboard_id,
-            motherboards.name AS motherboard_name,
-            chipset.name AS motherboard_chipset,
-            motherboard_socket.name AS motherboard_socket,
-            motherboard_manufacturer.name AS motherboard_manufacturer,
-            form_factor.name AS motherboard_form_factor,
-            motherboard_memory_type.name AS motherboard_memory_type
-        FROM 
-            compatibility
-        JOIN cpus ON cpus.id = compatibility.cpu_id
-        JOIN motherboards ON motherboards.id = compatibility.motherboard_id
-        JOIN socket ON socket.id = cpus.socket_id
-        JOIN chipset ON chipset.id = motherboards.chipset_id
-        JOIN cpu_generation ON cpu_generation.id = cpus.generation_id
-        JOIN manufacturer AS cpu_manufacturer ON cpu_manufacturer.id = cpus.manufacturer_id
-        JOIN manufacturer AS motherboard_manufacturer ON motherboard_manufacturer.id = motherboards.manufacturer_id
-        JOIN form_factor ON form_factor.id = motherboards.form_factor_id
-        JOIN memory_type AS cpu_memory_type ON cpu_memory_type.id = cpus.memory_type_id
-        JOIN memory_type AS motherboard_memory_type ON motherboard_memory_type.id = motherboards.memory_type_id
-        JOIN socket AS motherboard_socket ON motherboard_socket.id = motherboards.socket_id;
-    `;
-
+app.get('/api/cpu/:id', async (req, res) => {
+    const { id } = req.params;
     try {
-        const result = await pool.query(query);
-        res.json(result.rows);
+        const result = await pool.query(
+            'SELECT c.id, c.name, cg.name AS generation, s.name AS socket, m.name AS manufacturer, mt.name AS memory_type, ' +
+            'cf.name AS family, ca.name AS architecture, c.core_count, c.thread_count, c.base_frequency, c.max_frequency, ' +
+            'c.cache_l3, c.has_integrated_gpu, c.unlocked_multiplier, c.memory_max_gb, c.process_nm, c.tdp_watts ' +
+            'FROM cpus c ' +
+            'JOIN cpu_generations cg ON cg.id = c.generation_id ' +
+            'JOIN sockets s ON s.id = c.socket_id ' +
+            'JOIN manufacturers m ON m.id = c.manufacturer_id ' +
+            'JOIN memory_types mt ON mt.id = c.memory_type_id ' +
+            'JOIN cpu_families cf ON cf.id = c.family_id ' +
+            'JOIN cpu_architectures ca ON ca.id = c.architecture_id ' +
+            'WHERE c.id = $1',
+            [id]
+        );
+        if (!result.rows[0]) {
+            return res.status(404).json({ error: 'CPU not found' });
+        }
+        res.json(result.rows[0]);
     } catch (err) {
-        console.error(err);
-        res.status(500).send('Server error');
+        console.error('Error fetching CPU:', err.stack);
+        res.status(500).json({ error: 'Database error', details: err.message });
     }
-});*/
+});
+
+app.get('/api/motherboard/:id', async (req, res) => {
+    const { id } = req.params;
+    try {
+        const result = await pool.query(
+            'SELECT m.id, m.name, ch.name AS chipset, s.name AS socket, mf.name AS manufacturer, ff.name AS form_factor, ' +
+            'mt.name AS memory_type, m.ram_slots, m.ram_channels, m.max_ram_capacity, m.min_ram_frequency, ' +
+            'm.max_ram_frequency, m.xmp_support ' +
+            'FROM motherboards m ' +
+            'JOIN chipsets ch ON ch.id = m.chipset_id ' +
+            'JOIN sockets s ON s.id = m.socket_id ' +
+            'JOIN manufacturers mf ON mf.id = m.manufacturer_id ' +
+            'JOIN form_factors ff ON ff.id = m.form_factor_id ' +
+            'JOIN memory_types mt ON mt.id = m.memory_type_id ' +
+            'WHERE m.id = $1',
+            [id]
+        );
+        if (!result.rows[0]) {
+            return res.status(404).json({ error: 'Motherboard not found' });
+        }
+        res.json(result.rows[0]);
+    } catch (err) {
+        console.error('Error fetching motherboard:', err.stack);
+        res.status(500).json({ error: 'Database error', details: err.message });
+    }
+});
 
 app.listen(5001, () => {
     console.log('Server is running on port 5001');

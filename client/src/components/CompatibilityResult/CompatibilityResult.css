@@ -14,11 +14,30 @@
     padding: 30px 0 0 40px;
 }
 
-.сompatibility-result__label {
+.сompatibility-сheck__label {
     font-family: var(--font-family);
     font-weight: 600;
     font-size: 18px;
     color: #242426;
+}
+
+.сompatibility-result__status {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    gap: 10px;
+}
+
+.faCheckCircle {
+    color: green;
+    font-size: 24px;
+    vertical-align: middle;
+}
+
+.faTimesCircle {
+    color: red;
+    font-size: 24px;
+    vertical-align: middle;
 }
 
 .сompatibility-result__result-table-wrapper {
