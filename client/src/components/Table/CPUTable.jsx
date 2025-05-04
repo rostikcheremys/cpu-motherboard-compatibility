@@ -1,48 +1,39 @@
+import './Tables.css';
+
 import React from 'react';
-import Table from '@mui/material/Table';
-import TableBody from '@mui/material/TableBody';
-import TableCell from '@mui/material/TableCell';
+
 import TableContainer from '@mui/material/TableContainer';
-import TableHead from '@mui/material/TableHead';
-import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
+import Table from '@mui/material/Table';
+import TableHead from "@mui/material/TableHead";
+import TableBody from '@mui/material/TableBody';
+import TableRow from '@mui/material/TableRow';
+import TableCell from '@mui/material/TableCell';
 
 export const CPUTable = ({ cpuData }) => {
-    if (!cpuData) {
-        return <p>No CPU data available.</p>;
-    }
+    if (!cpuData) console.error('Error: No CPU data provided to CPUTable');
 
     return (
-        <TableContainer component={Paper}>
+        <TableContainer className="table-container" component={Paper}>
             <Table>
+                <TableHead>
+                    <TableRow>
+                        <TableCell>Specifications</TableCell>
+                        <TableCell align="center">CPU</TableCell>
+                    </TableRow>
+                </TableHead>
                 <TableBody>
-                    <TableRow>
-                        <TableCell>Name</TableCell>
-                        <TableCell align="center">{cpuData.name}</TableCell>
-                    </TableRow>
-                    <TableRow>
-                        <TableCell>Generation</TableCell>
-                        <TableCell align="center">{cpuData.generation}</TableCell>
-                    </TableRow>
-                    <TableRow>
-                        <TableCell>Socket</TableCell>
-                        <TableCell align="center">{cpuData.socket}</TableCell>
-                    </TableRow>
                     <TableRow>
                         <TableCell>Manufacturer</TableCell>
                         <TableCell align="center">{cpuData.manufacturer}</TableCell>
                     </TableRow>
                     <TableRow>
-                        <TableCell>Memory Type</TableCell>
-                        <TableCell align="center">{cpuData.memory_type}</TableCell>
+                        <TableCell>Name</TableCell>
+                        <TableCell align="center">{cpuData.name}</TableCell>
                     </TableRow>
                     <TableRow>
-                        <TableCell>Family</TableCell>
-                        <TableCell align="center">{cpuData.family}</TableCell>
-                    </TableRow>
-                    <TableRow>
-                        <TableCell>Architecture</TableCell>
-                        <TableCell align="center">{cpuData.architecture}</TableCell>
+                        <TableCell>Socket</TableCell>
+                        <TableCell align="center">{cpuData.socket}</TableCell>
                     </TableRow>
                     <TableRow>
                         <TableCell>Core Count</TableCell>
@@ -65,12 +56,28 @@ export const CPUTable = ({ cpuData }) => {
                         <TableCell align="center">{cpuData.cache_l3} MB</TableCell>
                     </TableRow>
                     <TableRow>
+                        <TableCell>Architecture</TableCell>
+                        <TableCell align="center">{cpuData.architecture}</TableCell>
+                    </TableRow>
+                    <TableRow>
+                        <TableCell>Family</TableCell>
+                        <TableCell align="center">{cpuData.family}</TableCell>
+                    </TableRow>
+                    <TableRow>
+                        <TableCell>Generation</TableCell>
+                        <TableCell align="center">{cpuData.generation}</TableCell>
+                    </TableRow>
+                    <TableRow>
                         <TableCell>Has Integrated GPU</TableCell>
                         <TableCell align="center">{cpuData.has_integrated_gpu ? 'Yes' : 'No'}</TableCell>
                     </TableRow>
                     <TableRow>
                         <TableCell>Unlocked Multiplier</TableCell>
                         <TableCell align="center">{cpuData.unlocked_multiplier ? 'Yes' : 'No'}</TableCell>
+                    </TableRow>
+                    <TableRow>
+                        <TableCell>Memory Type</TableCell>
+                        <TableCell align="center">{cpuData.memory_type}</TableCell>
                     </TableRow>
                     <TableRow>
                         <TableCell>Memory Max GB</TableCell>

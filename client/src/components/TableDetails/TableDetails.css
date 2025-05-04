@@ -1,0 +1,18 @@
+.table-details {
+    width: 900px;
+}
+
+.table-details__tables {
+    margin: 40px 0;
+}
+
+.table-details__label {
+    font-family: var(--font-family);
+    font-weight: 600;
+}
+
+.table-details__label-value {
+    margin-left: 5px;
+    display: inline-block;
+}
+

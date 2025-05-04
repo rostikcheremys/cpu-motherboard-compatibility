@@ -7,30 +7,34 @@ import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
 
-export const MBTable = ({ motherboardData }) => {
-    if (!motherboardData) {
-        return <p>No motherboard data available.</p>;
-    }
+export const MotherboardTable = ({ motherboardData }) => {
+    if (!motherboardData) console.error('Error: No motherboard data provided to MotherboardTable');
 
     return (
-        <TableContainer component={Paper}>
+        <TableContainer className="table-container" component={Paper}>
             <Table>
+                <TableHead>
+                    <TableRow>
+                        <TableCell>Specifications</TableCell>
+                        <TableCell align="center">Motherboard</TableCell>
+                    </TableRow>
+                </TableHead>
                 <TableBody>
+                    <TableRow>
+                        <TableCell>Manufacturer</TableCell>
+                        <TableCell align="center">{motherboardData.manufacturer}</TableCell>
+                    </TableRow>
                     <TableRow>
                         <TableCell>Name</TableCell>
                         <TableCell align="center">{motherboardData.name}</TableCell>
-                    </TableRow>
-                    <TableRow>
-                        <TableCell>Chipset</TableCell>
-                        <TableCell align="center">{motherboardData.chipset}</TableCell>
                     </TableRow>
                     <TableRow>
                         <TableCell>Socket</TableCell>
                         <TableCell align="center">{motherboardData.socket}</TableCell>
                     </TableRow>
                     <TableRow>
-                        <TableCell>Manufacturer</TableCell>
-                        <TableCell align="center">{motherboardData.manufacturer}</TableCell>
+                        <TableCell>Chipset</TableCell>
+                        <TableCell align="center">{motherboardData.chipset}</TableCell>
                     </TableRow>
                     <TableRow>
                         <TableCell>Form Factor</TableCell>

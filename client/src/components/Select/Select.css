@@ -1,0 +1,7 @@
+.select {
+    width: 400px;
+}
+
+.MuiAutocomplete-option, .MuiInputBase-input {
+    font-family: var(--font-family) !important;
+}

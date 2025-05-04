@@ -1,38 +1,47 @@
-.сompatibility-сheck {
-    width: 1000px;
-    margin: 70px 0 0;
+.compatibility-check {
+    width: 900px;
+    margin: 100px 0 0;
 }
 
-.сompatibility-сheck__wrapper {
-    background: white;
+.compatibility-check__wrapper {
     height: auto;
-    border-radius: 15px;
-    border: 1px solid #e2e4e5;
+    border-radius: 12px;
 }
 
-.сompatibility-сheck__label-wrapper {
-    padding: 30px 0 0 40px;
+.compatibility-check__label-wrapper {
+    display: flex;
+    flex-direction: row;
+    gap: 10px;
 }
 
-.сompatibility-сheck__label {
+.compatibility-check__label {
     font-family: var(--font-family);
     font-weight: 600;
-    font-size: 18px;
-    color: #242426;
 }
 
-.сompatibility-сheck__hint {
+.faCheckCircle {
+    color: green;
+    font-size: 24px;
+    vertical-align: middle;
+}
+
+.faTimesCircle {
+    color: red;
+    font-size: 24px;
+    vertical-align: middle;
+}
+
+.compatibility-check__hint {
     font-family: var(--font-family);
     font-weight: 300;
-    font-size: 14px;
     line-height: 133%;
-    color: #575f6e;
-    padding-left: 10px;
+    font-size: 14px;
+    padding: 0 0 5px 10px;
 }
 
-.сompatibility-сheck__select-wrapper {
+.compatibility-check__select-wrapper {
     display: flex;
     flex-direction: row;
     justify-content: space-between;
-    padding: 20px 40px 30px 40px;
+    margin-top: 20px;
 }

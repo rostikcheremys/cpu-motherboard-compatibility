@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import TextField from '@mui/material/TextField';
 import Autocomplete from '@mui/material/Autocomplete';
-import './SearchSelect.css';
+import './Select.css';
 
-export const SearchSelect = ({ options, onSelect, disabled }) => {
+export const Select = ({ options, onSelect, disabled }) => {
     const [value, setValue] = useState(null);
 
     useEffect(() => {
@@ -19,7 +19,7 @@ export const SearchSelect = ({ options, onSelect, disabled }) => {
     };
 
     return (
-        <div className="search-select">
+        <div className="select">
             <Autocomplete
                 options={options}
                 getOptionLabel={(option) => option.name}
