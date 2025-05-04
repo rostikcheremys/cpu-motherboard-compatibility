@@ -1,5 +1,4 @@
-import { styled } from '@mui/material/styles';
-import Switch from '@mui/material/Switch';
+import { Switch, styled } from '@mui/material';
 
 const sunIcon = encodeURIComponent(`
   <svg xmlns="http://www.w3.org/2000/svg" height="20" width="20" viewBox="0 0 20 20">
@@ -32,7 +31,7 @@ export const ThemeSwitch = styled(Switch)(() => ({
         },
     },
     '& .MuiSwitch-thumb': {
-        backgroundColor: '#7d8183',
+        backgroundColor: '#fff',
         width: 32,
         height: 32,
         '&::before': {
