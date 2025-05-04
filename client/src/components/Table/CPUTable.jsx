@@ -1,6 +1,4 @@
-import './Tables.css';
-
-import React from 'react';
+import './Table.css';
 
 import TableContainer from '@mui/material/TableContainer';
 import Paper from '@mui/material/Paper';

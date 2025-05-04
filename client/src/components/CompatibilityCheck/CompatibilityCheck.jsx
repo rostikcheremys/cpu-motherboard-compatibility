@@ -1,7 +1,9 @@
-import React, { useEffect, useState } from "react";
-import { Select } from "../Select/Select.jsx";
 import "./CompatibilityCheck.css";
+
+import { useEffect, useState } from "react";
 import { FaCheckCircle, FaTimesCircle } from 'react-icons/fa';
+
+import { Select } from "../Select/Select.jsx";
 
 export const CompatibilityCheck = ({ setSelectedCpu, setSelectedMotherboard }) => {
     const [cpuOptions, setCpuOptions] = useState([]);
@@ -30,7 +32,6 @@ export const CompatibilityCheck = ({ setSelectedCpu, setSelectedMotherboard }) =
         }
     }, [selectedCpu]);
 
-    // Логіка перевірки сумісності
     useEffect(() => {
         if (selectedCpu && selectedMotherboard) {
             fetch(`http://localhost:3001/api/motherboards/compatible/${selectedCpu.id}`)
@@ -83,8 +84,7 @@ export const CompatibilityCheck = ({ setSelectedCpu, setSelectedMotherboard }) =
                         />
                     </div>
 
-                    <div
-                        className="compatibility-check__select"
+                    <div className="compatibility-check__select"
                         onMouseEnter={() => setIsHovered(true)}
                         onMouseLeave={() => setIsHovered(false)}
                     >

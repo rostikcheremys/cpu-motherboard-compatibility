@@ -1,8 +1,6 @@
 import "./Header.css";
 
-import React from "react";
-
-import {ThemeSwitch} from "./ThemeSwitch.jsx";
+import {ThemeSwitch} from "../ThemeSwitch/ThemeSwitch.jsx";
 
 export const Header = ({ darkMode, toggleDarkMode }) => {
     return (

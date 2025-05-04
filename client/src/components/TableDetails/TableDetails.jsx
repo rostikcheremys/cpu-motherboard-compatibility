@@ -1,5 +1,7 @@
-import React, { useEffect, useState } from "react";
 import "./TableDetails.css";
+
+import { useEffect, useState } from "react";
+
 import { CPUTable } from "../Table/CPUTable.jsx";
 import { MotherboardTable } from "../Table/MotherboardTable.jsx";
 

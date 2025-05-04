@@ -1,7 +1,9 @@
-import React, { useEffect, useState } from 'react';
+import './Select.css';
+
+import { useEffect, useState } from 'react';
+
 import TextField from '@mui/material/TextField';
 import Autocomplete from '@mui/material/Autocomplete';
-import './Select.css';
 
 export const Select = ({ options, onSelect, disabled }) => {
     const [value, setValue] = useState(null);

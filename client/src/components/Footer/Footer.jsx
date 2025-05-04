@@ -1,6 +1,5 @@
 import "./Footer.css";
 
-import React from "react";
 import { GitHub } from "@mui/icons-material";
 
 export const Footer = () => {

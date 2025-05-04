@@ -1,10 +1,13 @@
 import './App.css';
+
 import React, { useState, useMemo } from "react";
+
 import { ThemeProvider, createTheme, CssBaseline } from '@mui/material';
+
 import { Header } from "./components/Header/Header.jsx";
 import { CompatibilityCheck } from "./components/CompatibilityCheck/CompatibilityCheck.jsx";
 import { TableDetails } from "./components/TableDetails/TableDetails.jsx";
-import {Footer} from "./components/Footer/Footer.jsx";
+import { Footer } from "./components/Footer/Footer.jsx";
 
 export default function App() {
     const [darkMode, setDarkMode] = useState(false);
