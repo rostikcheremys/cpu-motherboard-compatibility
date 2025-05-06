@@ -1,19 +1,12 @@
 import './Select.css';
 
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 
 import TextField from '@mui/material/TextField';
 import Autocomplete from '@mui/material/Autocomplete';
 
-export const Select = ({ options, onSelect, disabled }) => {
+export const Select = ({ options, onSelect }) => {
     const [value, setValue] = useState(null);
-
-    useEffect(() => {
-        if (disabled) {
-            setValue(null);
-            onSelect(null);
-        }
-    }, [disabled, onSelect]);
 
     const handleChange = (event, newValue) => {
         setValue(newValue);
@@ -27,7 +20,6 @@ export const Select = ({ options, onSelect, disabled }) => {
                 getOptionLabel={(option) => option.name}
                 value={value}
                 onChange={handleChange}
-                disabled={disabled}
                 renderInput={(params) =>
                     <TextField {...params} variant="outlined" />
                 }
