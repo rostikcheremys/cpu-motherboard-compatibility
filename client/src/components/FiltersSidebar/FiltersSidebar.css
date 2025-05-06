@@ -1,6 +1,11 @@
 .filters-sidebar__title {
     display: flex;
-    margin-bottom: 10px;
+    justify-content: center;
+}
+
+.filters-sidebar__label {
+    display: flex;
+    margin: 15px 0 15px 10px;
 }
 
 .filters-sidebar__title-icon {
@@ -13,7 +18,12 @@
     font-family: var(--third-family) !important;
     font-size: 24px !important;
     font-weight: 700 !important;
+}
 
+.filters-sidebar__typography-component {
+    font-family: var(--third-family) !important;
+    font-size: 20px !important;
+    font-weight: 700 !important;
 }
 
 .filters-sidebar__icon {

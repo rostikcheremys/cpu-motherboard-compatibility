@@ -8,7 +8,7 @@ export const CompatibilityCheck = ({ setSelectedCpu, setSelectedMotherboard, fil
     const [motherboardOptions, setMotherboardOptions] = useState([]);
     const [selectedCpu, setLocalSelectedCpu] = useState(null);
     const [selectedMotherboard, setLocalSelectedMotherboard] = useState(null);
-    const [isCompatible, setIsCompatible] = useState(null); // null - не перевірено, true/false - результат
+    const [isCompatible, setIsCompatible] = useState(null);
 
     useEffect(() => {
         if (filteredCpus && filteredCpus.length > 0) {

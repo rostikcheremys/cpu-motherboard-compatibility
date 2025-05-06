@@ -42,7 +42,7 @@ export const TableDetails = ({ selectedCpu, selectedMotherboard }) => {
                 </div>
             )}
             {motherboardData && (
-                <div className="table-details-table-wrapper">
+                <div className="table-details__tables">
                     <h3 className="table-details__label">
                         Motherboard: <span className="table-details__label-value">{motherboardData.name}</span>
                     </h3>

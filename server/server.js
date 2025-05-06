@@ -106,8 +106,6 @@ app.get('/api/components/filter', async (req, res) => {
         coreCountMax,
         threadCountMin,
         threadCountMax,
-        frequencyMin,
-        frequencyMax,
         cacheL3Min,
         cacheL3Max,
         architectures,
@@ -124,16 +122,11 @@ app.get('/api/components/filter', async (req, res) => {
         tdpMax,
         chipsets,
         formFactors,
-        ramSlotsMin,
-        ramSlotsMax,
-        ramChannelsMin,
-        ramChannelsMax,
-        maxRamCapacityMin,
-        maxRamCapacityMax,
-        minRamFrequencyMin,
-        minRamFrequencyMax,
-        maxRamFrequencyMin,
-        maxRamFrequencyMax,
+        ramSlots,
+        ramChannels,
+        maxRamCapacity,
+        minRamFrequency,
+        maxRamFrequency,
         xmpSupport
     } = req.query;
 
@@ -182,16 +175,6 @@ app.get('/api/components/filter', async (req, res) => {
         if (threadCountMax) {
             cpuConditions.push(`c.thread_count <= $${cpuParamIndex}`);
             cpuParams.push(parseInt(threadCountMax));
-            cpuParamIndex++;
-        }
-        if (frequencyMin) {
-            cpuConditions.push(`c.base_frequency >= $${cpuParamIndex}`);
-            cpuParams.push(parseFloat(frequencyMin));
-            cpuParamIndex++;
-        }
-        if (frequencyMax) {
-            cpuConditions.push(`c.max_frequency <= $${cpuParamIndex}`);
-            cpuParams.push(parseFloat(frequencyMax));
             cpuParamIndex++;
         }
         if (cacheL3Min) {
@@ -316,55 +299,45 @@ app.get('/api/components/filter', async (req, res) => {
             motherboardParams.push(memoryTypeList);
             motherboardParamIndex++;
         }
-        if (ramSlotsMin) {
-            motherboardConditions.push(`m.ram_slots >= $${motherboardParamIndex}`);
-            motherboardParams.push(parseInt(ramSlotsMin));
-            motherboardParamIndex++;
+        if (ramSlots) {
+            const ramSlotsList = ramSlots.split(',').map(item => parseInt(item.trim()));
+            if (ramSlotsList.length > 0) {
+                motherboardConditions.push(`m.ram_slots = ANY($${motherboardParamIndex}::int[])`);
+                motherboardParams.push(ramSlotsList);
+                motherboardParamIndex++;
+            }
         }
-        if (ramSlotsMax) {
-            motherboardConditions.push(`m.ram_slots <= $${motherboardParamIndex}`);
-            motherboardParams.push(parseInt(ramSlotsMax));
-            motherboardParamIndex++;
+        if (ramChannels) {
+            const ramChannelsList = ramChannels.split(',').map(item => parseInt(item.trim()));
+            if (ramChannelsList.length > 0) {
+                motherboardConditions.push(`m.ram_channels = ANY($${motherboardParamIndex}::int[])`);
+                motherboardParams.push(ramChannelsList);
+                motherboardParamIndex++;
+            }
         }
-        if (ramChannelsMin) {
-            motherboardConditions.push(`m.ram_channels >= $${motherboardParamIndex}`);
-            motherboardParams.push(parseInt(ramChannelsMin));
-            motherboardParamIndex++;
+        if (maxRamCapacity) {
+            const maxRamCapacityList = maxRamCapacity.split(',').map(item => parseInt(item.trim()));
+            if (maxRamCapacityList.length > 0) {
+                motherboardConditions.push(`m.max_ram_capacity = ANY($${motherboardParamIndex}::int[])`);
+                motherboardParams.push(maxRamCapacityList);
+                motherboardParamIndex++;
+            }
         }
-        if (ramChannelsMax) {
-            motherboardConditions.push(`m.ram_channels <= $${motherboardParamIndex}`);
-            motherboardParams.push(parseInt(ramChannelsMax));
-            motherboardParamIndex++;
+        if (minRamFrequency) {
+            const minRamFrequencyList = minRamFrequency.split(',').map(item => parseInt(item.trim()));
+            if (minRamFrequencyList.length > 0) {
+                motherboardConditions.push(`m.min_ram_frequency = ANY($${motherboardParamIndex}::int[])`);
+                motherboardParams.push(minRamFrequencyList);
+                motherboardParamIndex++;
+            }
         }
-        if (maxRamCapacityMin) {
-            motherboardConditions.push(`m.max_ram_capacity >= $${motherboardParamIndex}`);
-            motherboardParams.push(parseInt(maxRamCapacityMin));
-            motherboardParamIndex++;
-        }
-        if (maxRamCapacityMax) {
-            motherboardConditions.push(`m.max_ram_capacity <= $${motherboardParamIndex}`);
-            motherboardParams.push(parseInt(maxRamCapacityMax));
-            motherboardParamIndex++;
-        }
-        if (minRamFrequencyMin) {
-            motherboardConditions.push(`m.min_ram_frequency >= $${motherboardParamIndex}`);
-            motherboardParams.push(parseInt(minRamFrequencyMin));
-            motherboardParamIndex++;
-        }
-        if (minRamFrequencyMax) {
-            motherboardConditions.push(`m.min_ram_frequency <= $${motherboardParamIndex}`);
-            motherboardParams.push(parseInt(minRamFrequencyMax));
-            motherboardParamIndex++;
-        }
-        if (maxRamFrequencyMin) {
-            motherboardConditions.push(`m.max_ram_frequency >= $${motherboardParamIndex}`);
-            motherboardParams.push(parseInt(maxRamFrequencyMin));
-            motherboardParamIndex++;
-        }
-        if (maxRamFrequencyMax) {
-            motherboardConditions.push(`m.max_ram_frequency <= $${motherboardParamIndex}`);
-            motherboardParams.push(parseInt(maxRamFrequencyMax));
-            motherboardParamIndex++;
+        if (maxRamFrequency) {
+            const maxRamFrequencyList = maxRamFrequency.split(',').map(item => parseInt(item.trim()));
+            if (maxRamFrequencyList.length > 0) {
+                motherboardConditions.push(`m.max_ram_frequency = ANY($${motherboardParamIndex}::int[])`);
+                motherboardParams.push(maxRamFrequencyList);
+                motherboardParamIndex++;
+            }
         }
         if (xmpSupport) {
             motherboardConditions.push(`m.xmp_support = $${motherboardParamIndex}`);
@@ -403,7 +376,7 @@ app.get('/api/filter-options', async (req, res) => {
             chipsets,
             formFactors,
             cpuNumericRanges,
-            motherboardNumericRanges
+            motherboardNumericValues
         ] = await Promise.all([
             pool.query('SELECT DISTINCT name FROM manufacturers ORDER BY name'),
             pool.query('SELECT DISTINCT name FROM sockets ORDER BY name'),
@@ -425,13 +398,9 @@ app.get('/api/filter-options', async (req, res) => {
                 FROM cpus
             `),
             pool.query(`
-                SELECT 
-                    MIN(ram_slots) AS ram_slots_min, MAX(ram_slots) AS ram_slots_max,
-                    MIN(ram_channels) AS ram_channels_min, MAX(ram_channels) AS ram_channels_max,
-                    MIN(max_ram_capacity) AS max_ram_capacity_min, MAX(max_ram_capacity) AS max_ram_capacity_max,
-                    MIN(min_ram_frequency) AS min_ram_frequency_min, MAX(min_ram_frequency) AS min_ram_frequency_max,
-                    MIN(max_ram_frequency) AS max_ram_frequency_min, MAX(max_ram_frequency) AS max_ram_frequency_max
+                SELECT DISTINCT ram_slots, ram_channels, max_ram_capacity, min_ram_frequency, max_ram_frequency
                 FROM motherboards
+                ORDER BY ram_slots, ram_channels, max_ram_capacity, min_ram_frequency, max_ram_frequency
             `)
         ]);
 
@@ -446,54 +415,34 @@ app.get('/api/filter-options', async (req, res) => {
             formFactors: formFactors.rows.map(row => row.name),
             ranges: {
                 coreCount: {
-                    min: cpuNumericRanges.rows[0].core_count_min || 1,
-                    max: cpuNumericRanges.rows[0].core_count_max || 64
+                    min: cpuNumericRanges.rows[0].core_count_min,
+                    max: cpuNumericRanges.rows[0].core_count_max
                 },
                 threadCount: {
-                    min: cpuNumericRanges.rows[0].thread_count_min || 1,
-                    max: cpuNumericRanges.rows[0].thread_count_max || 128
-                },
-                frequency: {
-                    min: cpuNumericRanges.rows[0].frequency_min || 1,
-                    max: cpuNumericRanges.rows[0].frequency_max || 6,
-                    step: 0.1
+                    min: cpuNumericRanges.rows[0].thread_count_min,
+                    max: cpuNumericRanges.rows[0].thread_count_max
                 },
                 cacheL3: {
-                    min: cpuNumericRanges.rows[0].cache_l3_min || 1,
-                    max: cpuNumericRanges.rows[0].cache_l3_max || 128
+                    min: cpuNumericRanges.rows[0].cache_l3_min,
+                    max: cpuNumericRanges.rows[0].cache_l3_max
                 },
                 memoryMaxGb: {
-                    min: cpuNumericRanges.rows[0].memory_max_gb_min || 1,
-                    max: cpuNumericRanges.rows[0].memory_max_gb_max || 256
+                    min: cpuNumericRanges.rows[0].memory_max_gb_min,
+                    max: cpuNumericRanges.rows[0].memory_max_gb_max
                 },
                 processNm: {
-                    min: cpuNumericRanges.rows[0].process_nm_min || 1,
-                    max: cpuNumericRanges.rows[0].process_nm_max || 100
+                    min: cpuNumericRanges.rows[0].process_nm_min,
+                    max: cpuNumericRanges.rows[0].process_nm_max
                 },
                 tdp: {
-                    min: cpuNumericRanges.rows[0].tdp_min || 1,
-                    max: cpuNumericRanges.rows[0].tdp_max || 200
+                    min: cpuNumericRanges.rows[0].tdp_min,
+                    max: cpuNumericRanges.rows[0].tdp_max
                 },
-                ramSlots: {
-                    min: motherboardNumericRanges.rows[0].ram_slots_min || 1,
-                    max: motherboardNumericRanges.rows[0].ram_slots_max || 8
-                },
-                ramChannels: {
-                    min: motherboardNumericRanges.rows[0].ram_channels_min || 1,
-                    max: motherboardNumericRanges.rows[0].ram_channels_max || 4
-                },
-                maxRamCapacity: {
-                    min: motherboardNumericRanges.rows[0].max_ram_capacity_min || 1,
-                    max: motherboardNumericRanges.rows[0].max_ram_capacity_max || 256
-                },
-                minRamFrequency: {
-                    min: motherboardNumericRanges.rows[0].min_ram_frequency_min || 1600,
-                    max: motherboardNumericRanges.rows[0].min_ram_frequency_max || 6000
-                },
-                maxRamFrequency: {
-                    min: motherboardNumericRanges.rows[0].max_ram_frequency_min || 1600,
-                    max: motherboardNumericRanges.rows[0].max_ram_frequency_max || 6000
-                }
+                ramSlots: motherboardNumericValues.rows.map(row => row.ram_slots),
+                ramChannels: motherboardNumericValues.rows.map(row => row.ram_channels),
+                maxRamCapacity: motherboardNumericValues.rows.map(row => row.max_ram_capacity),
+                minRamFrequency: motherboardNumericValues.rows.map(row => row.min_ram_frequency),
+                maxRamFrequency: motherboardNumericValues.rows.map(row => row.max_ram_frequency)
             }
         };
 
