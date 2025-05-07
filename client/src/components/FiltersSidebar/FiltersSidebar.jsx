@@ -295,6 +295,61 @@ export const FiltersSidebar = ({ open, onClose, onFilterChange, onMotherboardFil
                     </div>
                     <Typography className="filters-sidebar__typography">Filters</Typography>
                 </div>
+
+                <div className="filters-sidebar__label">
+                    <Typography className="filters-sidebar__typography-component">Common</Typography>
+                </div>
+
+                <Accordion className="filters-sidebar__accordion">
+                    <AccordionSummary expandIcon={<ExpandMoreIcon/>}>
+                        <Typography>Socket</Typography>
+                    </AccordionSummary>
+                    <AccordionDetails>
+                        {filterOptions.sockets.length > 0 ? (
+                            filterOptions.sockets.map((socket) => (
+                                <FormControlLabel
+                                    key={socket}
+                                    control={
+                                        <Checkbox
+                                            checked={selectedSockets.includes(socket)}
+                                            onChange={() => handleCheckboxChange(setSelectedSockets, selectedSockets, socket)}
+                                        />
+                                    }
+                                    label={socket}
+                                />
+                            ))
+                        ) : (
+                            <Typography>No sockets available</Typography>
+                        )}
+                    </AccordionDetails>
+                </Accordion>
+
+                <Divider/>
+
+                <Accordion className="filters-sidebar__accordion">
+                    <AccordionSummary expandIcon={<ExpandMoreIcon/>}>
+                        <Typography>Memory Type</Typography>
+                    </AccordionSummary>
+                    <AccordionDetails>
+                        {filterOptions.memoryTypes.length > 0 ? (
+                            filterOptions.memoryTypes.map((memoryType) => (
+                                <FormControlLabel
+                                    key={memoryType}
+                                    control={
+                                        <Checkbox
+                                            checked={selectedMemoryTypes.includes(memoryType)}
+                                            onChange={() => handleCheckboxChange(setSelectedMemoryTypes, selectedMemoryTypes, memoryType)}
+                                        />
+                                    }
+                                    label={memoryType}
+                                />
+                            ))
+                        ) : (
+                            <Typography>No memory types available</Typography>
+                        )}
+                    </AccordionDetails>
+                </Accordion>
+
                 <div className="filters-sidebar__label">
                     <Typography className="filters-sidebar__typography-component">CPU</Typography>
                 </div>
@@ -537,32 +592,6 @@ export const FiltersSidebar = ({ open, onClose, onFilterChange, onMotherboardFil
                             }
                             label="No"
                         />
-                    </AccordionDetails>
-                </Accordion>
-
-                <Divider/>
-
-                <Accordion className="filters-sidebar__accordion">
-                    <AccordionSummary expandIcon={<ExpandMoreIcon/>}>
-                        <Typography>Memory Type</Typography>
-                    </AccordionSummary>
-                    <AccordionDetails>
-                        {filterOptions.memoryTypes.length > 0 ? (
-                            filterOptions.memoryTypes.map((memoryType) => (
-                                <FormControlLabel
-                                    key={memoryType}
-                                    control={
-                                        <Checkbox
-                                            checked={selectedMemoryTypes.includes(memoryType)}
-                                            onChange={() => handleCheckboxChange(setSelectedMemoryTypes, selectedMemoryTypes, memoryType)}
-                                        />
-                                    }
-                                    label={memoryType}
-                                />
-                            ))
-                        ) : (
-                            <Typography>No memory types available</Typography>
-                        )}
                     </AccordionDetails>
                 </Accordion>
 
@@ -860,8 +889,6 @@ export const FiltersSidebar = ({ open, onClose, onFilterChange, onMotherboardFil
                         />
                     </AccordionDetails>
                 </Accordion>
-
-                <Divider/>
             </Box>
         </Drawer>
     );
