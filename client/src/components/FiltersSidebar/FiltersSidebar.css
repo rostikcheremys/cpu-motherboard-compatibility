@@ -1,6 +1,6 @@
 .filters-sidebar__title {
     display: flex;
-    justify-content: center;
+    justify-content: space-between;
 }
 
 .filters-sidebar__label {
@@ -8,10 +8,15 @@
     margin: 15px 0 15px 10px;
 }
 
-.filters-sidebar__title-icon {
+.filters-sidebar__filters-icon,
+.filters-sidebar__close-icon {
     display: flex;
     align-items: center;
     justify-content: center;
+}
+
+.filters-sidebar__close-icon {
+    cursor: pointer;
 }
 
 .filters-sidebar__typography {

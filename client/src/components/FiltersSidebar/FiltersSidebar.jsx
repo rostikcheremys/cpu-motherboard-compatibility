@@ -14,6 +14,7 @@ import {
 } from "@mui/material";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import FilterListIcon from "@mui/icons-material/FilterList";
+import CloseIcon from '@mui/icons-material/Close';
 
 export const FiltersSidebar = ({ open, onClose, onFilterChange, onMotherboardFilterChange }) => {
     const [filterOptions, setFilterOptions] = useState({
@@ -64,6 +65,7 @@ export const FiltersSidebar = ({ open, onClose, onFilterChange, onMotherboardFil
     const [selectedMaxRamFrequency, setSelectedMaxRamFrequency] = useState([]);
     const [xmpSupport, setXmpSupport] = useState(null);
     const [shouldFetch, setShouldFetch] = useState(false);
+    const [expandedAccordions, setExpandedAccordions] = useState(new Set());
 
     useEffect(() => {
         if (open) {
@@ -162,6 +164,14 @@ export const FiltersSidebar = ({ open, onClose, onFilterChange, onMotherboardFil
             };
             fetchFilterOptions();
         } else {
+            // Зберігаємо стан розкриття акордеонів при закритті
+            const currentExpanded = new Set();
+            Array.from(document.querySelectorAll('.filters-sidebar__accordion')).forEach((accordion) => {
+                if (accordion.querySelector('.Mui-expanded')) {
+                    currentExpanded.add(accordion.querySelector('button').textContent.trim());
+                }
+            });
+            setExpandedAccordions(currentExpanded);
             setShouldFetch(false);
         }
     }, [open]);
@@ -286,21 +296,39 @@ export const FiltersSidebar = ({ open, onClose, onFilterChange, onMotherboardFil
         setShouldFetch(true);
     };
 
+    const handleAccordionChange = (panel) => (event, isExpanded) => {
+        const newExpanded = new Set(expandedAccordions);
+        if (isExpanded) {
+            newExpanded.add(panel);
+        } else {
+            newExpanded.delete(panel);
+        }
+        setExpandedAccordions(newExpanded);
+    };
+
+    const handleCloseSidebar = () => {
+        onClose();
+    };
+
     return (
         <Drawer anchor="left" open={open} onClose={onClose}>
             <Box p={2} width={300} role="presentation">
                 <div className="filters-sidebar__title">
-                    <div className="filters-sidebar__title-icon">
+                    <div className="filters-sidebar__filters-icon">
                         <FilterListIcon className="filters-sidebar__icon"/>
+                        <Typography className="filters-sidebar__typography">Filters</Typography>
                     </div>
-                    <Typography className="filters-sidebar__typography">Filters</Typography>
+
+                    <div className="filters-sidebar__close-icon">
+                        <CloseIcon className="filters-sidebar__icon" onClick={handleCloseSidebar}/>
+                    </div>
                 </div>
 
                 <div className="filters-sidebar__label">
                     <Typography className="filters-sidebar__typography-component">Common</Typography>
                 </div>
 
-                <Accordion className="filters-sidebar__accordion">
+                <Accordion className="filters-sidebar__accordion" expanded={expandedAccordions.has("Socket")} onChange={handleAccordionChange("Socket")}>
                     <AccordionSummary expandIcon={<ExpandMoreIcon/>}>
                         <Typography>Socket</Typography>
                     </AccordionSummary>
@@ -326,7 +354,7 @@ export const FiltersSidebar = ({ open, onClose, onFilterChange, onMotherboardFil
 
                 <Divider/>
 
-                <Accordion className="filters-sidebar__accordion">
+                <Accordion className="filters-sidebar__accordion" expanded={expandedAccordions.has("Memory Type")} onChange={handleAccordionChange("Memory Type")}>
                     <AccordionSummary expandIcon={<ExpandMoreIcon/>}>
                         <Typography>Memory Type</Typography>
                     </AccordionSummary>
@@ -354,7 +382,7 @@ export const FiltersSidebar = ({ open, onClose, onFilterChange, onMotherboardFil
                     <Typography className="filters-sidebar__typography-component">CPU</Typography>
                 </div>
 
-                <Accordion className="filters-sidebar__accordion">
+                <Accordion className="filters-sidebar__accordion" expanded={expandedAccordions.has("Manufacturer")} onChange={handleAccordionChange("Manufacturer")}>
                     <AccordionSummary expandIcon={<ExpandMoreIcon/>}>
                         <Typography>Manufacturer</Typography>
                     </AccordionSummary>
@@ -380,7 +408,7 @@ export const FiltersSidebar = ({ open, onClose, onFilterChange, onMotherboardFil
 
                 <Divider/>
 
-                <Accordion className="filters-sidebar__accordion">
+                <Accordion className="filters-sidebar__accordion" expanded={expandedAccordions.has("Socket")} onChange={handleAccordionChange("Socket")}>
                     <AccordionSummary expandIcon={<ExpandMoreIcon/>}>
                         <Typography>Socket</Typography>
                     </AccordionSummary>
@@ -406,7 +434,7 @@ export const FiltersSidebar = ({ open, onClose, onFilterChange, onMotherboardFil
 
                 <Divider/>
 
-                <Accordion className="filters-sidebar__accordion">
+                <Accordion className="filters-sidebar__accordion" expanded={expandedAccordions.has("Core Count")} onChange={handleAccordionChange("Core Count")}>
                     <AccordionSummary expandIcon={<ExpandMoreIcon/>}>
                         <Typography>Core Count</Typography>
                     </AccordionSummary>
@@ -425,7 +453,7 @@ export const FiltersSidebar = ({ open, onClose, onFilterChange, onMotherboardFil
 
                 <Divider/>
 
-                <Accordion className="filters-sidebar__accordion">
+                <Accordion className="filters-sidebar__accordion" expanded={expandedAccordions.has("Thread Count")} onChange={handleAccordionChange("Thread Count")}>
                     <AccordionSummary expandIcon={<ExpandMoreIcon/>}>
                         <Typography>Thread Count</Typography>
                     </AccordionSummary>
@@ -444,7 +472,7 @@ export const FiltersSidebar = ({ open, onClose, onFilterChange, onMotherboardFil
 
                 <Divider/>
 
-                <Accordion className="filters-sidebar__accordion">
+                <Accordion className="filters-sidebar__accordion" expanded={expandedAccordions.has("Cache L3 (MB)")} onChange={handleAccordionChange("Cache L3 (MB)")}>
                     <AccordionSummary expandIcon={<ExpandMoreIcon/>}>
                         <Typography>Cache L3 (MB)</Typography>
                     </AccordionSummary>
@@ -463,7 +491,7 @@ export const FiltersSidebar = ({ open, onClose, onFilterChange, onMotherboardFil
 
                 <Divider/>
 
-                <Accordion className="filters-sidebar__accordion">
+                <Accordion className="filters-sidebar__accordion" expanded={expandedAccordions.has("Architecture")} onChange={handleAccordionChange("Architecture")}>
                     <AccordionSummary expandIcon={<ExpandMoreIcon/>}>
                         <Typography>Architecture</Typography>
                     </AccordionSummary>
@@ -489,7 +517,7 @@ export const FiltersSidebar = ({ open, onClose, onFilterChange, onMotherboardFil
 
                 <Divider/>
 
-                <Accordion className="filters-sidebar__accordion">
+                <Accordion className="filters-sidebar__accordion" expanded={expandedAccordions.has("Family")} onChange={handleAccordionChange("Family")}>
                     <AccordionSummary expandIcon={<ExpandMoreIcon/>}>
                         <Typography>Family</Typography>
                     </AccordionSummary>
@@ -515,7 +543,7 @@ export const FiltersSidebar = ({ open, onClose, onFilterChange, onMotherboardFil
 
                 <Divider/>
 
-                <Accordion className="filters-sidebar__accordion">
+                <Accordion className="filters-sidebar__accordion" expanded={expandedAccordions.has("Generation")} onChange={handleAccordionChange("Generation")}>
                     <AccordionSummary expandIcon={<ExpandMoreIcon/>}>
                         <Typography>Generation</Typography>
                     </AccordionSummary>
@@ -541,7 +569,7 @@ export const FiltersSidebar = ({ open, onClose, onFilterChange, onMotherboardFil
 
                 <Divider/>
 
-                <Accordion className="filters-sidebar__accordion">
+                <Accordion className="filters-sidebar__accordion" expanded={expandedAccordions.has("Has Integrated GPU")} onChange={handleAccordionChange("Has Integrated GPU")}>
                     <AccordionSummary expandIcon={<ExpandMoreIcon/>}>
                         <Typography>Has Integrated GPU</Typography>
                     </AccordionSummary>
@@ -569,7 +597,7 @@ export const FiltersSidebar = ({ open, onClose, onFilterChange, onMotherboardFil
 
                 <Divider/>
 
-                <Accordion className="filters-sidebar__accordion">
+                <Accordion className="filters-sidebar__accordion" expanded={expandedAccordions.has("Unlocked Multiplier")} onChange={handleAccordionChange("Unlocked Multiplier")}>
                     <AccordionSummary expandIcon={<ExpandMoreIcon/>}>
                         <Typography>Unlocked Multiplier</Typography>
                     </AccordionSummary>
@@ -597,7 +625,7 @@ export const FiltersSidebar = ({ open, onClose, onFilterChange, onMotherboardFil
 
                 <Divider/>
 
-                <Accordion className="filters-sidebar__accordion">
+                <Accordion className="filters-sidebar__accordion" expanded={expandedAccordions.has("Memory Max GB")} onChange={handleAccordionChange("Memory Max GB")}>
                     <AccordionSummary expandIcon={<ExpandMoreIcon/>}>
                         <Typography>Memory Max GB</Typography>
                     </AccordionSummary>
@@ -616,7 +644,7 @@ export const FiltersSidebar = ({ open, onClose, onFilterChange, onMotherboardFil
 
                 <Divider/>
 
-                <Accordion className="filters-sidebar__accordion">
+                <Accordion className="filters-sidebar__accordion" expanded={expandedAccordions.has("Process (nm)")} onChange={handleAccordionChange("Process (nm)")}>
                     <AccordionSummary expandIcon={<ExpandMoreIcon/>}>
                         <Typography>Process (nm)</Typography>
                     </AccordionSummary>
@@ -635,7 +663,7 @@ export const FiltersSidebar = ({ open, onClose, onFilterChange, onMotherboardFil
 
                 <Divider/>
 
-                <Accordion className="filters-sidebar__accordion">
+                <Accordion className="filters-sidebar__accordion" expanded={expandedAccordions.has("TDP (Watts)")} onChange={handleAccordionChange("TDP (Watts)")}>
                     <AccordionSummary expandIcon={<ExpandMoreIcon/>}>
                         <Typography>TDP (Watts)</Typography>
                     </AccordionSummary>
@@ -656,7 +684,7 @@ export const FiltersSidebar = ({ open, onClose, onFilterChange, onMotherboardFil
                     <Typography className="filters-sidebar__typography-component">Motherboard</Typography>
                 </div>
 
-                <Accordion className="filters-sidebar__accordion">
+                <Accordion className="filters-sidebar__accordion" expanded={expandedAccordions.has("Manufacturer")} onChange={handleAccordionChange("Manufacturer")}>
                     <AccordionSummary expandIcon={<ExpandMoreIcon/>}>
                         <Typography>Manufacturer</Typography>
                     </AccordionSummary>
@@ -682,7 +710,7 @@ export const FiltersSidebar = ({ open, onClose, onFilterChange, onMotherboardFil
 
                 <Divider/>
 
-                <Accordion className="filters-sidebar__accordion">
+                <Accordion className="filters-sidebar__accordion" expanded={expandedAccordions.has("Chipset")} onChange={handleAccordionChange("Chipset")}>
                     <AccordionSummary expandIcon={<ExpandMoreIcon/>}>
                         <Typography>Chipset</Typography>
                     </AccordionSummary>
@@ -708,7 +736,7 @@ export const FiltersSidebar = ({ open, onClose, onFilterChange, onMotherboardFil
 
                 <Divider/>
 
-                <Accordion className="filters-sidebar__accordion">
+                <Accordion className="filters-sidebar__accordion" expanded={expandedAccordions.has("Form Factor")} onChange={handleAccordionChange("Form Factor")}>
                     <AccordionSummary expandIcon={<ExpandMoreIcon/>}>
                         <Typography>Form Factor</Typography>
                     </AccordionSummary>
@@ -734,7 +762,7 @@ export const FiltersSidebar = ({ open, onClose, onFilterChange, onMotherboardFil
 
                 <Divider/>
 
-                <Accordion className="filters-sidebar__accordion">
+                <Accordion className="filters-sidebar__accordion" expanded={expandedAccordions.has("RAM Slots")} onChange={handleAccordionChange("RAM Slots")}>
                     <AccordionSummary expandIcon={<ExpandMoreIcon/>}>
                         <Typography>RAM Slots</Typography>
                     </AccordionSummary>
@@ -760,7 +788,7 @@ export const FiltersSidebar = ({ open, onClose, onFilterChange, onMotherboardFil
 
                 <Divider/>
 
-                <Accordion className="filters-sidebar__accordion">
+                <Accordion className="filters-sidebar__accordion" expanded={expandedAccordions.has("RAM Channels")} onChange={handleAccordionChange("RAM Channels")}>
                     <AccordionSummary expandIcon={<ExpandMoreIcon/>}>
                         <Typography>RAM Channels</Typography>
                     </AccordionSummary>
@@ -786,7 +814,7 @@ export const FiltersSidebar = ({ open, onClose, onFilterChange, onMotherboardFil
 
                 <Divider/>
 
-                <Accordion className="filters-sidebar__accordion">
+                <Accordion className="filters-sidebar__accordion" expanded={expandedAccordions.has("RAM Capacity (GB)")} onChange={handleAccordionChange("RAM Capacity (GB)")}>
                     <AccordionSummary expandIcon={<ExpandMoreIcon/>}>
                         <Typography>RAM Capacity (GB)</Typography>
                     </AccordionSummary>
@@ -812,7 +840,7 @@ export const FiltersSidebar = ({ open, onClose, onFilterChange, onMotherboardFil
 
                 <Divider/>
 
-                <Accordion className="filters-sidebar__accordion">
+                <Accordion className="filters-sidebar__accordion" expanded={expandedAccordions.has("Min RAM Frequency (MHz)")} onChange={handleAccordionChange("Min RAM Frequency (MHz)")}>
                     <AccordionSummary expandIcon={<ExpandMoreIcon/>}>
                         <Typography>Min RAM Frequency (MHz)</Typography>
                     </AccordionSummary>
@@ -838,7 +866,7 @@ export const FiltersSidebar = ({ open, onClose, onFilterChange, onMotherboardFil
 
                 <Divider/>
 
-                <Accordion className="filters-sidebar__accordion">
+                <Accordion className="filters-sidebar__accordion" expanded={expandedAccordions.has("Max RAM Frequency (MHz)")} onChange={handleAccordionChange("Max RAM Frequency (MHz)")}>
                     <AccordionSummary expandIcon={<ExpandMoreIcon/>}>
                         <Typography>Max RAM Frequency (MHz)</Typography>
                     </AccordionSummary>
@@ -864,7 +892,7 @@ export const FiltersSidebar = ({ open, onClose, onFilterChange, onMotherboardFil
 
                 <Divider/>
 
-                <Accordion className="filters-sidebar__accordion">
+                <Accordion className="filters-sidebar__accordion" expanded={expandedAccordions.has("XMP Support")} onChange={handleAccordionChange("XMP Support")}>
                     <AccordionSummary expandIcon={<ExpandMoreIcon/>}>
                         <Typography>XMP Support</Typography>
                     </AccordionSummary>
