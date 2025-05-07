@@ -1,20 +1,13 @@
 import "./FiltersSidebar.css";
-import React, { useState, useEffect, useCallback } from "react";
-import {
-    Drawer,
-    Box,
-    Typography,
-    FormControlLabel,
-    Checkbox,
-    Slider,
-    Accordion,
-    AccordionSummary,
-    AccordionDetails,
-    Divider
-} from "@mui/material";
-import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
-import FilterListIcon from "@mui/icons-material/FilterList";
-import CloseIcon from '@mui/icons-material/Close';
+
+import { useState, useEffect, useCallback } from "react";
+
+import { Drawer, Box } from "@mui/material";
+
+import { FilterHeader } from "./components/FilterHeader/FilterHeader.jsx";
+import { CommonFilters } from "./filters/CommonFilters/CommonFilters.jsx";
+import { CpuFilters } from "./filters/CPUFilters/CPUFilters.jsx";
+import { MotherboardFilters } from "./filters/MotherboardFilters/MotherboardFilters.jsx";
 
 export const FiltersSidebar = ({ open, onClose, onFilterChange, onMotherboardFilterChange }) => {
     const [filterOptions, setFilterOptions] = useState({
@@ -164,7 +157,6 @@ export const FiltersSidebar = ({ open, onClose, onFilterChange, onMotherboardFil
             };
             fetchFilterOptions();
         } else {
-            // Зберігаємо стан розкриття акордеонів при закритті
             const currentExpanded = new Set();
             Array.from(document.querySelectorAll('.filters-sidebar__accordion')).forEach((accordion) => {
                 if (accordion.querySelector('.Mui-expanded')) {
@@ -313,610 +305,85 @@ export const FiltersSidebar = ({ open, onClose, onFilterChange, onMotherboardFil
     return (
         <Drawer anchor="left" open={open} onClose={onClose}>
             <Box p={2} width={300} role="presentation">
-                <div className="filters-sidebar__title">
-                    <div className="filters-sidebar__filters-icon">
-                        <FilterListIcon className="filters-sidebar__icon"/>
-                        <Typography className="filters-sidebar__typography">Filters</Typography>
-                    </div>
-
-                    <div className="filters-sidebar__close-icon">
-                        <CloseIcon className="filters-sidebar__icon" onClick={handleCloseSidebar}/>
-                    </div>
-                </div>
-
-                <div className="filters-sidebar__label">
-                    <Typography className="filters-sidebar__typography-component">Common</Typography>
-                </div>
-
-                <Accordion className="filters-sidebar__accordion" expanded={expandedAccordions.has("Socket")} onChange={handleAccordionChange("Socket")}>
-                    <AccordionSummary expandIcon={<ExpandMoreIcon/>}>
-                        <Typography>Socket</Typography>
-                    </AccordionSummary>
-                    <AccordionDetails>
-                        {filterOptions.sockets.length > 0 ? (
-                            filterOptions.sockets.map((socket) => (
-                                <FormControlLabel
-                                    key={socket}
-                                    control={
-                                        <Checkbox
-                                            checked={selectedSockets.includes(socket)}
-                                            onChange={() => handleCheckboxChange(setSelectedSockets, selectedSockets, socket)}
-                                        />
-                                    }
-                                    label={socket}
-                                />
-                            ))
-                        ) : (
-                            <Typography>No sockets available</Typography>
-                        )}
-                    </AccordionDetails>
-                </Accordion>
-
-                <Divider/>
-
-                <Accordion className="filters-sidebar__accordion" expanded={expandedAccordions.has("Memory Type")} onChange={handleAccordionChange("Memory Type")}>
-                    <AccordionSummary expandIcon={<ExpandMoreIcon/>}>
-                        <Typography>Memory Type</Typography>
-                    </AccordionSummary>
-                    <AccordionDetails>
-                        {filterOptions.memoryTypes.length > 0 ? (
-                            filterOptions.memoryTypes.map((memoryType) => (
-                                <FormControlLabel
-                                    key={memoryType}
-                                    control={
-                                        <Checkbox
-                                            checked={selectedMemoryTypes.includes(memoryType)}
-                                            onChange={() => handleCheckboxChange(setSelectedMemoryTypes, selectedMemoryTypes, memoryType)}
-                                        />
-                                    }
-                                    label={memoryType}
-                                />
-                            ))
-                        ) : (
-                            <Typography>No memory types available</Typography>
-                        )}
-                    </AccordionDetails>
-                </Accordion>
-
-                <div className="filters-sidebar__label">
-                    <Typography className="filters-sidebar__typography-component">CPU</Typography>
-                </div>
-
-                <Accordion className="filters-sidebar__accordion" expanded={expandedAccordions.has("Manufacturer")} onChange={handleAccordionChange("Manufacturer")}>
-                    <AccordionSummary expandIcon={<ExpandMoreIcon/>}>
-                        <Typography>Manufacturer</Typography>
-                    </AccordionSummary>
-                    <AccordionDetails>
-                        {filterOptions.manufacturers.cpu.length > 0 ? (
-                            filterOptions.manufacturers.cpu.map((manufacturer) => (
-                                <FormControlLabel
-                                    key={manufacturer}
-                                    control={
-                                        <Checkbox
-                                            checked={selectedManufacturersCpu.includes(manufacturer)}
-                                            onChange={() => handleCheckboxChange(setSelectedManufacturersCpu, selectedManufacturersCpu, manufacturer)}
-                                        />
-                                    }
-                                    label={manufacturer}
-                                />
-                            ))
-                        ) : (
-                            <Typography>No manufacturers available</Typography>
-                        )}
-                    </AccordionDetails>
-                </Accordion>
-
-                <Divider/>
-
-                <Accordion className="filters-sidebar__accordion" expanded={expandedAccordions.has("Socket")} onChange={handleAccordionChange("Socket")}>
-                    <AccordionSummary expandIcon={<ExpandMoreIcon/>}>
-                        <Typography>Socket</Typography>
-                    </AccordionSummary>
-                    <AccordionDetails>
-                        {filterOptions.sockets.length > 0 ? (
-                            filterOptions.sockets.map((socket) => (
-                                <FormControlLabel
-                                    key={socket}
-                                    control={
-                                        <Checkbox
-                                            checked={selectedSockets.includes(socket)}
-                                            onChange={() => handleCheckboxChange(setSelectedSockets, selectedSockets, socket)}
-                                        />
-                                    }
-                                    label={socket}
-                                />
-                            ))
-                        ) : (
-                            <Typography>No sockets available</Typography>
-                        )}
-                    </AccordionDetails>
-                </Accordion>
-
-                <Divider/>
-
-                <Accordion className="filters-sidebar__accordion" expanded={expandedAccordions.has("Core Count")} onChange={handleAccordionChange("Core Count")}>
-                    <AccordionSummary expandIcon={<ExpandMoreIcon/>}>
-                        <Typography>Core Count</Typography>
-                    </AccordionSummary>
-                    <AccordionDetails>
-                        <Slider
-                            value={coreCountRange}
-                            onChange={handleRangeChange(setCoreCountRange)}
-                            onChangeCommitted={handleRangeChangeCommitted}
-                            valueLabelDisplay="auto"
-                            min={filterOptions.ranges.coreCount.min}
-                            max={filterOptions.ranges.coreCount.max}
-                            step={1}
-                        />
-                    </AccordionDetails>
-                </Accordion>
-
-                <Divider/>
-
-                <Accordion className="filters-sidebar__accordion" expanded={expandedAccordions.has("Thread Count")} onChange={handleAccordionChange("Thread Count")}>
-                    <AccordionSummary expandIcon={<ExpandMoreIcon/>}>
-                        <Typography>Thread Count</Typography>
-                    </AccordionSummary>
-                    <AccordionDetails>
-                        <Slider
-                            value={threadCountRange}
-                            onChange={handleRangeChange(setThreadCountRange)}
-                            onChangeCommitted={handleRangeChangeCommitted}
-                            valueLabelDisplay="auto"
-                            min={filterOptions.ranges.threadCount.min}
-                            max={filterOptions.ranges.threadCount.max}
-                            step={1}
-                        />
-                    </AccordionDetails>
-                </Accordion>
-
-                <Divider/>
-
-                <Accordion className="filters-sidebar__accordion" expanded={expandedAccordions.has("Cache L3 (MB)")} onChange={handleAccordionChange("Cache L3 (MB)")}>
-                    <AccordionSummary expandIcon={<ExpandMoreIcon/>}>
-                        <Typography>Cache L3 (MB)</Typography>
-                    </AccordionSummary>
-                    <AccordionDetails>
-                        <Slider
-                            value={cacheL3Range}
-                            onChange={handleRangeChange(setCacheL3Range)}
-                            onChangeCommitted={handleRangeChangeCommitted}
-                            valueLabelDisplay="auto"
-                            min={filterOptions.ranges.cacheL3.min}
-                            max={filterOptions.ranges.cacheL3.max}
-                            step={1}
-                        />
-                    </AccordionDetails>
-                </Accordion>
-
-                <Divider/>
-
-                <Accordion className="filters-sidebar__accordion" expanded={expandedAccordions.has("Architecture")} onChange={handleAccordionChange("Architecture")}>
-                    <AccordionSummary expandIcon={<ExpandMoreIcon/>}>
-                        <Typography>Architecture</Typography>
-                    </AccordionSummary>
-                    <AccordionDetails>
-                        {filterOptions.architectures.length > 0 ? (
-                            filterOptions.architectures.map((architecture) => (
-                                <FormControlLabel
-                                    key={architecture}
-                                    control={
-                                        <Checkbox
-                                            checked={selectedArchitectures.includes(architecture)}
-                                            onChange={() => handleCheckboxChange(setSelectedArchitectures, selectedArchitectures, architecture)}
-                                        />
-                                    }
-                                    label={architecture}
-                                />
-                            ))
-                        ) : (
-                            <Typography>No architectures available</Typography>
-                        )}
-                    </AccordionDetails>
-                </Accordion>
-
-                <Divider/>
-
-                <Accordion className="filters-sidebar__accordion" expanded={expandedAccordions.has("Family")} onChange={handleAccordionChange("Family")}>
-                    <AccordionSummary expandIcon={<ExpandMoreIcon/>}>
-                        <Typography>Family</Typography>
-                    </AccordionSummary>
-                    <AccordionDetails>
-                        {filterOptions.families.length > 0 ? (
-                            filterOptions.families.map((family) => (
-                                <FormControlLabel
-                                    key={family}
-                                    control={
-                                        <Checkbox
-                                            checked={selectedFamilies.includes(family)}
-                                            onChange={() => handleCheckboxChange(setSelectedFamilies, selectedFamilies, family)}
-                                        />
-                                    }
-                                    label={family}
-                                />
-                            ))
-                        ) : (
-                            <Typography>No families available</Typography>
-                        )}
-                    </AccordionDetails>
-                </Accordion>
-
-                <Divider/>
-
-                <Accordion className="filters-sidebar__accordion" expanded={expandedAccordions.has("Generation")} onChange={handleAccordionChange("Generation")}>
-                    <AccordionSummary expandIcon={<ExpandMoreIcon/>}>
-                        <Typography>Generation</Typography>
-                    </AccordionSummary>
-                    <AccordionDetails>
-                        {filterOptions.generations.length > 0 ? (
-                            filterOptions.generations.map((generation) => (
-                                <FormControlLabel
-                                    key={generation}
-                                    control={
-                                        <Checkbox
-                                            checked={selectedGenerations.includes(generation)}
-                                            onChange={() => handleCheckboxChange(setSelectedGenerations, selectedGenerations, generation)}
-                                        />
-                                    }
-                                    label={generation}
-                                />
-                            ))
-                        ) : (
-                            <Typography>No generations available</Typography>
-                        )}
-                    </AccordionDetails>
-                </Accordion>
-
-                <Divider/>
-
-                <Accordion className="filters-sidebar__accordion" expanded={expandedAccordions.has("Has Integrated GPU")} onChange={handleAccordionChange("Has Integrated GPU")}>
-                    <AccordionSummary expandIcon={<ExpandMoreIcon/>}>
-                        <Typography>Has Integrated GPU</Typography>
-                    </AccordionSummary>
-                    <AccordionDetails>
-                        <FormControlLabel
-                            control={
-                                <Checkbox
-                                    checked={hasIntegratedGpu === true}
-                                    onChange={() => handleBooleanChange(setHasIntegratedGpu, true)}
-                                />
-                            }
-                            label="Yes"
-                        />
-                        <FormControlLabel
-                            control={
-                                <Checkbox
-                                    checked={hasIntegratedGpu === false}
-                                    onChange={() => handleBooleanChange(setHasIntegratedGpu, false)}
-                                />
-                            }
-                            label="No"
-                        />
-                    </AccordionDetails>
-                </Accordion>
-
-                <Divider/>
-
-                <Accordion className="filters-sidebar__accordion" expanded={expandedAccordions.has("Unlocked Multiplier")} onChange={handleAccordionChange("Unlocked Multiplier")}>
-                    <AccordionSummary expandIcon={<ExpandMoreIcon/>}>
-                        <Typography>Unlocked Multiplier</Typography>
-                    </AccordionSummary>
-                    <AccordionDetails>
-                        <FormControlLabel
-                            control={
-                                <Checkbox
-                                    checked={unlockedMultiplier === true}
-                                    onChange={() => handleBooleanChange(setUnlockedMultiplier, true)}
-                                />
-                            }
-                            label="Yes"
-                        />
-                        <FormControlLabel
-                            control={
-                                <Checkbox
-                                    checked={unlockedMultiplier === false}
-                                    onChange={() => handleBooleanChange(setUnlockedMultiplier, false)}
-                                />
-                            }
-                            label="No"
-                        />
-                    </AccordionDetails>
-                </Accordion>
-
-                <Divider/>
-
-                <Accordion className="filters-sidebar__accordion" expanded={expandedAccordions.has("Memory Max GB")} onChange={handleAccordionChange("Memory Max GB")}>
-                    <AccordionSummary expandIcon={<ExpandMoreIcon/>}>
-                        <Typography>Memory Max GB</Typography>
-                    </AccordionSummary>
-                    <AccordionDetails>
-                        <Slider
-                            value={memoryMaxGbRange}
-                            onChange={handleRangeChange(setMemoryMaxGbRange)}
-                            onChangeCommitted={handleRangeChangeCommitted}
-                            valueLabelDisplay="auto"
-                            min={filterOptions.ranges.memoryMaxGb.min}
-                            max={filterOptions.ranges.memoryMaxGb.max}
-                            step={1}
-                        />
-                    </AccordionDetails>
-                </Accordion>
-
-                <Divider/>
-
-                <Accordion className="filters-sidebar__accordion" expanded={expandedAccordions.has("Process (nm)")} onChange={handleAccordionChange("Process (nm)")}>
-                    <AccordionSummary expandIcon={<ExpandMoreIcon/>}>
-                        <Typography>Process (nm)</Typography>
-                    </AccordionSummary>
-                    <AccordionDetails>
-                        <Slider
-                            value={processNmRange}
-                            onChange={handleRangeChange(setProcessNmRange)}
-                            onChangeCommitted={handleRangeChangeCommitted}
-                            valueLabelDisplay="auto"
-                            min={filterOptions.ranges.processNm.min}
-                            max={filterOptions.ranges.processNm.max}
-                            step={1}
-                        />
-                    </AccordionDetails>
-                </Accordion>
-
-                <Divider/>
-
-                <Accordion className="filters-sidebar__accordion" expanded={expandedAccordions.has("TDP (Watts)")} onChange={handleAccordionChange("TDP (Watts)")}>
-                    <AccordionSummary expandIcon={<ExpandMoreIcon/>}>
-                        <Typography>TDP (Watts)</Typography>
-                    </AccordionSummary>
-                    <AccordionDetails>
-                        <Slider
-                            value={tdpRange}
-                            onChange={handleRangeChange(setTdpRange)}
-                            onChangeCommitted={handleRangeChangeCommitted}
-                            valueLabelDisplay="auto"
-                            min={filterOptions.ranges.tdp.min}
-                            max={filterOptions.ranges.tdp.max}
-                            step={5}
-                        />
-                    </AccordionDetails>
-                </Accordion>
-
-                <div className="filters-sidebar__label">
-                    <Typography className="filters-sidebar__typography-component">Motherboard</Typography>
-                </div>
-
-                <Accordion className="filters-sidebar__accordion" expanded={expandedAccordions.has("Manufacturer")} onChange={handleAccordionChange("Manufacturer")}>
-                    <AccordionSummary expandIcon={<ExpandMoreIcon/>}>
-                        <Typography>Manufacturer</Typography>
-                    </AccordionSummary>
-                    <AccordionDetails>
-                        {filterOptions.manufacturers.motherboard.length > 0 ? (
-                            filterOptions.manufacturers.motherboard.map((manufacturer) => (
-                                <FormControlLabel
-                                    key={manufacturer}
-                                    control={
-                                        <Checkbox
-                                            checked={selectedManufacturersMotherboard.includes(manufacturer)}
-                                            onChange={() => handleCheckboxChange(setSelectedManufacturersMotherboard, selectedManufacturersMotherboard, manufacturer)}
-                                        />
-                                    }
-                                    label={manufacturer}
-                                />
-                            ))
-                        ) : (
-                            <Typography>No manufacturers available</Typography>
-                        )}
-                    </AccordionDetails>
-                </Accordion>
-
-                <Divider/>
-
-                <Accordion className="filters-sidebar__accordion" expanded={expandedAccordions.has("Chipset")} onChange={handleAccordionChange("Chipset")}>
-                    <AccordionSummary expandIcon={<ExpandMoreIcon/>}>
-                        <Typography>Chipset</Typography>
-                    </AccordionSummary>
-                    <AccordionDetails>
-                        {filterOptions.chipsets.length > 0 ? (
-                            filterOptions.chipsets.map((chipset) => (
-                                <FormControlLabel
-                                    key={chipset}
-                                    control={
-                                        <Checkbox
-                                            checked={selectedChipsets.includes(chipset)}
-                                            onChange={() => handleCheckboxChange(setSelectedChipsets, selectedChipsets, chipset)}
-                                        />
-                                    }
-                                    label={chipset}
-                                />
-                            ))
-                        ) : (
-                            <Typography>No chipsets available</Typography>
-                        )}
-                    </AccordionDetails>
-                </Accordion>
-
-                <Divider/>
-
-                <Accordion className="filters-sidebar__accordion" expanded={expandedAccordions.has("Form Factor")} onChange={handleAccordionChange("Form Factor")}>
-                    <AccordionSummary expandIcon={<ExpandMoreIcon/>}>
-                        <Typography>Form Factor</Typography>
-                    </AccordionSummary>
-                    <AccordionDetails>
-                        {filterOptions.formFactors.length > 0 ? (
-                            filterOptions.formFactors.map((formFactor) => (
-                                <FormControlLabel
-                                    key={formFactor}
-                                    control={
-                                        <Checkbox
-                                            checked={selectedFormFactors.includes(formFactor)}
-                                            onChange={() => handleCheckboxChange(setSelectedFormFactors, selectedFormFactors, formFactor)}
-                                        />
-                                    }
-                                    label={formFactor}
-                                />
-                            ))
-                        ) : (
-                            <Typography>No form factors available</Typography>
-                        )}
-                    </AccordionDetails>
-                </Accordion>
-
-                <Divider/>
-
-                <Accordion className="filters-sidebar__accordion" expanded={expandedAccordions.has("RAM Slots")} onChange={handleAccordionChange("RAM Slots")}>
-                    <AccordionSummary expandIcon={<ExpandMoreIcon/>}>
-                        <Typography>RAM Slots</Typography>
-                    </AccordionSummary>
-                    <AccordionDetails>
-                        {filterOptions.ranges.ramSlots.length > 0 ? (
-                            filterOptions.ranges.ramSlots.map((value) => (
-                                <FormControlLabel
-                                    key={value}
-                                    control={
-                                        <Checkbox
-                                            checked={selectedRamSlots.includes(value)}
-                                            onChange={() => handleCheckboxChange(setSelectedRamSlots, selectedRamSlots, value)}
-                                        />
-                                    }
-                                    label={value}
-                                />
-                            ))
-                        ) : (
-                            <Typography>No RAM Slots available</Typography>
-                        )}
-                    </AccordionDetails>
-                </Accordion>
-
-                <Divider/>
-
-                <Accordion className="filters-sidebar__accordion" expanded={expandedAccordions.has("RAM Channels")} onChange={handleAccordionChange("RAM Channels")}>
-                    <AccordionSummary expandIcon={<ExpandMoreIcon/>}>
-                        <Typography>RAM Channels</Typography>
-                    </AccordionSummary>
-                    <AccordionDetails>
-                        {filterOptions.ranges.ramChannels.length > 0 ? (
-                            filterOptions.ranges.ramChannels.map((value) => (
-                                <FormControlLabel
-                                    key={value}
-                                    control={
-                                        <Checkbox
-                                            checked={selectedRamChannels.includes(value)}
-                                            onChange={() => handleCheckboxChange(setSelectedRamChannels, selectedRamChannels, value)}
-                                        />
-                                    }
-                                    label={value}
-                                />
-                            ))
-                        ) : (
-                            <Typography>No RAM Channels available</Typography>
-                        )}
-                    </AccordionDetails>
-                </Accordion>
-
-                <Divider/>
-
-                <Accordion className="filters-sidebar__accordion" expanded={expandedAccordions.has("RAM Capacity (GB)")} onChange={handleAccordionChange("RAM Capacity (GB)")}>
-                    <AccordionSummary expandIcon={<ExpandMoreIcon/>}>
-                        <Typography>RAM Capacity (GB)</Typography>
-                    </AccordionSummary>
-                    <AccordionDetails>
-                        {filterOptions.ranges.maxRamCapacity.length > 0 ? (
-                            filterOptions.ranges.maxRamCapacity.map((value) => (
-                                <FormControlLabel
-                                    key={value}
-                                    control={
-                                        <Checkbox
-                                            checked={selectedMaxRamCapacity.includes(value)}
-                                            onChange={() => handleCheckboxChange(setSelectedMaxRamCapacity, selectedMaxRamCapacity, value)}
-                                        />
-                                    }
-                                    label={value}
-                                />
-                            ))
-                        ) : (
-                            <Typography>No Max RAM Capacity available</Typography>
-                        )}
-                    </AccordionDetails>
-                </Accordion>
-
-                <Divider/>
-
-                <Accordion className="filters-sidebar__accordion" expanded={expandedAccordions.has("Min RAM Frequency (MHz)")} onChange={handleAccordionChange("Min RAM Frequency (MHz)")}>
-                    <AccordionSummary expandIcon={<ExpandMoreIcon/>}>
-                        <Typography>Min RAM Frequency (MHz)</Typography>
-                    </AccordionSummary>
-                    <AccordionDetails>
-                        {filterOptions.ranges.minRamFrequency.length > 0 ? (
-                            filterOptions.ranges.minRamFrequency.map((value) => (
-                                <FormControlLabel
-                                    key={value}
-                                    control={
-                                        <Checkbox
-                                            checked={selectedMinRamFrequency.includes(value)}
-                                            onChange={() => handleCheckboxChange(setSelectedMinRamFrequency, selectedMinRamFrequency, value)}
-                                        />
-                                    }
-                                    label={value}
-                                />
-                            ))
-                        ) : (
-                            <Typography>No Min RAM Frequency available</Typography>
-                        )}
-                    </AccordionDetails>
-                </Accordion>
-
-                <Divider/>
-
-                <Accordion className="filters-sidebar__accordion" expanded={expandedAccordions.has("Max RAM Frequency (MHz)")} onChange={handleAccordionChange("Max RAM Frequency (MHz)")}>
-                    <AccordionSummary expandIcon={<ExpandMoreIcon/>}>
-                        <Typography>Max RAM Frequency (MHz)</Typography>
-                    </AccordionSummary>
-                    <AccordionDetails>
-                        {filterOptions.ranges.maxRamFrequency.length > 0 ? (
-                            filterOptions.ranges.maxRamFrequency.map((value) => (
-                                <FormControlLabel
-                                    key={value}
-                                    control={
-                                        <Checkbox
-                                            checked={selectedMaxRamFrequency.includes(value)}
-                                            onChange={() => handleCheckboxChange(setSelectedMaxRamFrequency, selectedMaxRamFrequency, value)}
-                                        />
-                                    }
-                                    label={value}
-                                />
-                            ))
-                        ) : (
-                            <Typography>No Max RAM Frequency available</Typography>
-                        )}
-                    </AccordionDetails>
-                </Accordion>
-
-                <Divider/>
-
-                <Accordion className="filters-sidebar__accordion" expanded={expandedAccordions.has("XMP Support")} onChange={handleAccordionChange("XMP Support")}>
-                    <AccordionSummary expandIcon={<ExpandMoreIcon/>}>
-                        <Typography>XMP Support</Typography>
-                    </AccordionSummary>
-                    <AccordionDetails>
-                        <FormControlLabel
-                            control={
-                                <Checkbox
-                                    checked={xmpSupport === true}
-                                    onChange={() => handleBooleanChange(setXmpSupport, true)}
-                                />
-                            }
-                            label="Yes"
-                        />
-                        <FormControlLabel
-                            control={
-                                <Checkbox
-                                    checked={xmpSupport === false}
-                                    onChange={() => handleBooleanChange(setXmpSupport, false)}
-                                />
-                            }
-                            label="No"
-                        />
-                    </AccordionDetails>
-                </Accordion>
+                <FilterHeader handleCloseSidebar={handleCloseSidebar} />
+                <CommonFilters
+                    filterOptions={filterOptions}
+                    selectedSockets={selectedSockets}
+                    setSelectedSockets={setSelectedSockets}
+                    selectedMemoryTypes={selectedMemoryTypes}
+                    setSelectedMemoryTypes={setSelectedMemoryTypes}
+                    expandedAccordions={expandedAccordions}
+                    handleAccordionChange={handleAccordionChange}
+                    handleCheckboxChange={handleCheckboxChange}
+                />
+                <CpuFilters
+                    filterOptions={filterOptions}
+                    selectedManufacturersCpu={selectedManufacturersCpu}
+                    setSelectedManufacturersCpu={setSelectedManufacturersCpu}
+                    selectedSockets={selectedSockets}
+                    setSelectedSockets={setSelectedSockets}
+                    coreCountRange={coreCountRange}
+                    setCoreCountRange={setCoreCountRange}
+                    threadCountRange={threadCountRange}
+                    setThreadCountRange={setThreadCountRange}
+                    cacheL3Range={cacheL3Range}
+                    setCacheL3Range={setCacheL3Range}
+                    selectedArchitectures={selectedArchitectures}
+                    setSelectedArchitectures={setSelectedArchitectures}
+                    selectedFamilies={selectedFamilies}
+                    setSelectedFamilies={setSelectedFamilies}
+                    selectedGenerations={selectedGenerations}
+                    setSelectedGenerations={setSelectedGenerations}
+                    hasIntegratedGpu={hasIntegratedGpu}
+                    setHasIntegratedGpu={setHasIntegratedGpu}
+                    unlockedMultiplier={unlockedMultiplier}
+                    setUnlockedMultiplier={setUnlockedMultiplier}
+                    selectedMemoryTypes={selectedMemoryTypes}
+                    setSelectedMemoryTypes={setSelectedMemoryTypes}
+                    memoryMaxGbRange={memoryMaxGbRange}
+                    setMemoryMaxGbRange={setMemoryMaxGbRange}
+                    processNmRange={processNmRange}
+                    setProcessNmRange={setProcessNmRange}
+                    tdpRange={tdpRange}
+                    setTdpRange={setTdpRange}
+                    expandedAccordions={expandedAccordions}
+                    handleAccordionChange={handleAccordionChange}
+                    handleCheckboxChange={handleCheckboxChange}
+                    handleBooleanChange={handleBooleanChange}
+                    handleRangeChange={handleRangeChange}
+                    handleRangeChangeCommitted={handleRangeChangeCommitted}
+                />
+                <MotherboardFilters
+                    filterOptions={filterOptions}
+                    selectedManufacturersMotherboard={selectedManufacturersMotherboard}
+                    setSelectedManufacturersMotherboard={setSelectedManufacturersMotherboard}
+                    selectedSockets={selectedSockets}
+                    setSelectedSockets={setSelectedSockets}
+                    selectedChipsets={selectedChipsets}
+                    setSelectedChipsets={setSelectedChipsets}
+                    selectedFormFactors={selectedFormFactors}
+                    setSelectedFormFactors={setSelectedFormFactors}
+                    selectedMemoryTypes={selectedMemoryTypes}
+                    setSelectedMemoryTypes={setSelectedMemoryTypes}
+                    selectedRamSlots={selectedRamSlots}
+                    setSelectedRamSlots={setSelectedRamSlots}
+                    selectedRamChannels={selectedRamChannels}
+                    setSelectedRamChannels={setSelectedRamChannels}
+                    selectedMaxRamCapacity={selectedMaxRamCapacity}
+                    setSelectedMaxRamCapacity={setSelectedMaxRamCapacity}
+                    selectedMinRamFrequency={selectedMinRamFrequency}
+                    setSelectedMinRamFrequency={setSelectedMinRamFrequency}
+                    selectedMaxRamFrequency={selectedMaxRamFrequency}
+                    setSelectedMaxRamFrequency={setSelectedMaxRamFrequency}
+                    xmpSupport={xmpSupport}
+                    setXmpSupport={setXmpSupport}
+                    expandedAccordions={expandedAccordions}
+                    handleAccordionChange={handleAccordionChange}
+                    handleCheckboxChange={handleCheckboxChange}
+                    handleBooleanChange={handleBooleanChange}
+                    handleRangeChange={handleRangeChange}
+                    handleRangeChangeCommitted={handleRangeChangeCommitted}
+                />
             </Box>
         </Drawer>
     );

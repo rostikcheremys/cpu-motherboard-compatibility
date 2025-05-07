@@ -6,7 +6,7 @@ import { CompatibilityCheck } from "./components/CompatibilityCheck/Compatibilit
 import { TableDetails } from "./components/TableDetails/TableDetails.jsx";
 import { Footer } from "./components/Footer/Footer.jsx";
 import { FiltersSidebar } from "./components/FiltersSidebar/FiltersSidebar.jsx";
-import {FiltersButton} from "./components/FiltersButton/FiltersButton.jsx";
+import {FilterButton} from "./components/FiltersSidebar/components/FilterButton/FilterButton.jsx";
 
 export default function App() {
     const [darkMode, setDarkMode] = useState(false);
@@ -45,7 +45,7 @@ export default function App() {
                         toggleDarkMode={toggleDarkMode}
                     />
 
-                    <FiltersButton setIsFilterOpen={setIsFilterOpen} />
+                    <FilterButton setIsFilterOpen={setIsFilterOpen} />
 
                     <FiltersSidebar
                         open={isFilterOpen}

@@ -2,8 +2,8 @@ import "./TableDetails.css";
 
 import { useEffect, useState } from "react";
 
-import { CPUTable } from "../Table/CPUTable.jsx";
-import { MotherboardTable } from "../Table/MotherboardTable.jsx";
+import { CPUTable } from "../Tables/CPUTable.jsx";
+import { MotherboardTable } from "../Tables/MotherboardTable.jsx";
 
 export const TableDetails = ({ selectedCpu, selectedMotherboard }) => {
     const [cpuData, setCpuData] = useState(null);
