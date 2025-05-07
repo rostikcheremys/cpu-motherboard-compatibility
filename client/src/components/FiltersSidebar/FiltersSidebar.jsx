@@ -70,6 +70,7 @@ export const FiltersSidebar = ({ open, onClose, onFilterChange, onMotherboardFil
             const fetchFilterOptions = async () => {
                 try {
                     const response = await fetch('http://localhost:3001/api/filter-options');
+                    if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
                     const data = await response.json();
 
                     const ramSlots = Array.isArray(data.ranges?.ramSlots)
@@ -240,8 +241,12 @@ export const FiltersSidebar = ({ open, onClose, onFilterChange, onMotherboardFil
                 fetch(`http://localhost:3001/api/components/filter?${cpuParams.toString()}`),
                 fetch(`http://localhost:3001/api/components/filter?${motherboardParams.toString()}`)
             ]);
+            if (!cpuResponse.ok) throw new Error(`CPU fetch error: ${cpuResponse.status}`);
+            if (!motherboardResponse.ok) throw new Error(`Motherboard fetch error: ${motherboardResponse.status}`);
             const cpuData = await cpuResponse.json();
             const motherboardData = await motherboardResponse.json();
+            console.log('CPU Data:', cpuData);
+            console.log('Motherboard Data:', motherboardData);
             onFilterChange(cpuData.cpus);
             onMotherboardFilterChange(motherboardData.motherboards);
         } catch (error) {
@@ -280,7 +285,6 @@ export const FiltersSidebar = ({ open, onClose, onFilterChange, onMotherboardFil
     const handleRangeChangeCommitted = () => {
         setShouldFetch(true);
     };
-
 
     return (
         <Drawer anchor="left" open={open} onClose={onClose}>
@@ -618,7 +622,6 @@ export const FiltersSidebar = ({ open, onClose, onFilterChange, onMotherboardFil
                         />
                     </AccordionDetails>
                 </Accordion>
-
 
                 <div className="filters-sidebar__label">
                     <Typography className="filters-sidebar__typography-component">Motherboard</Typography>
