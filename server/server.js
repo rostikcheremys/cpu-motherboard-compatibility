@@ -100,6 +100,7 @@ app.get('/api/motherboard/:id', async (req, res) => {
 
 app.get('/api/components/filter', async (req, res) => {
     const {
+        type,
         manufacturers,
         sockets,
         coreCountMin,
@@ -131,233 +132,239 @@ app.get('/api/components/filter', async (req, res) => {
     } = req.query;
 
     try {
-        let cpuQuery = `
-            SELECT c.id, c.name
-            FROM cpus c
-            JOIN manufacturers m ON m.id = c.manufacturer_id
-            JOIN sockets s ON s.id = c.socket_id
-            JOIN cpu_architectures ca ON ca.id = c.architecture_id
-            JOIN cpu_families cf ON cf.id = c.family_id
-            JOIN cpu_generations cg ON cg.id = c.generation_id
-            JOIN memory_types mt ON mt.id = c.memory_type_id
-        `;
-        let cpuConditions = [];
-        let cpuParams = [];
-        let cpuParamIndex = 1;
+        let query, conditions, params, paramIndex;
 
-        if (manufacturers) {
-            const manufacturerList = manufacturers.split(',').map(item => item.trim());
-            cpuConditions.push(`m.name = ANY($${cpuParamIndex}::text[])`);
-            cpuParams.push(manufacturerList);
-            cpuParamIndex++;
-        }
-        if (sockets) {
-            const socketList = sockets.split(',').map(item => item.trim());
-            cpuConditions.push(`s.name = ANY($${cpuParamIndex}::text[])`);
-            cpuParams.push(socketList);
-            cpuParamIndex++;
-        }
-        if (coreCountMin) {
-            cpuConditions.push(`c.core_count >= $${cpuParamIndex}`);
-            cpuParams.push(parseInt(coreCountMin));
-            cpuParamIndex++;
-        }
-        if (coreCountMax) {
-            cpuConditions.push(`c.core_count <= $${cpuParamIndex}`);
-            cpuParams.push(parseInt(coreCountMax));
-            cpuParamIndex++;
-        }
-        if (threadCountMin) {
-            cpuConditions.push(`c.thread_count >= $${cpuParamIndex}`);
-            cpuParams.push(parseInt(threadCountMin));
-            cpuParamIndex++;
-        }
-        if (threadCountMax) {
-            cpuConditions.push(`c.thread_count <= $${cpuParamIndex}`);
-            cpuParams.push(parseInt(threadCountMax));
-            cpuParamIndex++;
-        }
-        if (cacheL3Min) {
-            cpuConditions.push(`c.cache_l3 >= $${cpuParamIndex}`);
-            cpuParams.push(parseInt(cacheL3Min));
-            cpuParamIndex++;
-        }
-        if (cacheL3Max) {
-            cpuConditions.push(`c.cache_l3 <= $${cpuParamIndex}`);
-            cpuParams.push(parseInt(cacheL3Max));
-            cpuParamIndex++;
-        }
-        if (architectures) {
-            const architectureList = architectures.split(',').map(item => item.trim());
-            cpuConditions.push(`ca.name = ANY($${cpuParamIndex}::text[])`);
-            cpuParams.push(architectureList);
-            cpuParamIndex++;
-        }
-        if (families) {
-            const familyList = families.split(',').map(item => item.trim());
-            cpuConditions.push(`cf.name = ANY($${cpuParamIndex}::text[])`);
-            cpuParams.push(familyList);
-            cpuParamIndex++;
-        }
-        if (generations) {
-            const generationList = generations.split(',').map(item => item.trim());
-            cpuConditions.push(`cg.name = ANY($${cpuParamIndex}::text[])`);
-            cpuParams.push(generationList);
-            cpuParamIndex++;
-        }
-        if (hasIntegratedGpu) {
-            cpuConditions.push(`c.has_integrated_gpu = $${cpuParamIndex}`);
-            cpuParams.push(hasIntegratedGpu === 'true');
-            cpuParamIndex++;
-        }
-        if (unlockedMultiplier) {
-            cpuConditions.push(`c.unlocked_multiplier = $${cpuParamIndex}`);
-            cpuParams.push(unlockedMultiplier === 'true');
-            cpuParamIndex++;
-        }
-        if (memoryTypes) {
-            const memoryTypeList = memoryTypes.split(',').map(item => item.trim());
-            cpuConditions.push(`mt.name = ANY($${cpuParamIndex}::text[])`);
-            cpuParams.push(memoryTypeList);
-            cpuParamIndex++;
-        }
-        if (memoryMaxGbMin) {
-            cpuConditions.push(`c.memory_max_gb >= $${cpuParamIndex}`);
-            cpuParams.push(parseInt(memoryMaxGbMin));
-            cpuParamIndex++;
-        }
-        if (memoryMaxGbMax) {
-            cpuConditions.push(`c.memory_max_gb <= $${cpuParamIndex}`);
-            cpuParams.push(parseInt(memoryMaxGbMax));
-            cpuParamIndex++;
-        }
-        if (processNmMin) {
-            cpuConditions.push(`c.process_nm >= $${cpuParamIndex}`);
-            cpuParams.push(parseInt(processNmMin));
-            cpuParamIndex++;
-        }
-        if (processNmMax) {
-            cpuConditions.push(`c.process_nm <= $${cpuParamIndex}`);
-            cpuParams.push(parseInt(processNmMax));
-            cpuParamIndex++;
-        }
-        if (tdpMin) {
-            cpuConditions.push(`c.tdp_watts >= $${cpuParamIndex}`);
-            cpuParams.push(parseInt(tdpMin));
-            cpuParamIndex++;
-        }
-        if (tdpMax) {
-            cpuConditions.push(`c.tdp_watts <= $${cpuParamIndex}`);
-            cpuParams.push(parseInt(tdpMax));
-            cpuParamIndex++;
-        }
+        if (type === 'cpu') {
+            query = `
+                SELECT c.id, c.name
+                FROM cpus c
+                JOIN manufacturers m ON m.id = c.manufacturer_id
+                JOIN sockets s ON s.id = c.socket_id
+                JOIN cpu_architectures ca ON ca.id = c.architecture_id
+                JOIN cpu_families cf ON cf.id = c.family_id
+                JOIN cpu_generations cg ON cg.id = c.generation_id
+                JOIN memory_types mt ON mt.id = c.memory_type_id
+            `;
+            conditions = [];
+            params = [];
+            paramIndex = 1;
 
-        if (cpuConditions.length > 0) {
-            cpuQuery += ' WHERE ' + cpuConditions.join(' AND ');
-        }
-
-        let motherboardQuery = `
-            SELECT m.id, m.name
-            FROM motherboards m
-            JOIN manufacturers mf ON mf.id = m.manufacturer_id
-            JOIN sockets s ON s.id = m.socket_id
-            JOIN chipsets ch ON ch.id = m.chipset_id
-            JOIN form_factors ff ON ff.id = m.form_factor_id
-            JOIN memory_types mt ON mt.id = m.memory_type_id
-        `;
-        let motherboardConditions = [];
-        let motherboardParams = [];
-        let motherboardParamIndex = 1;
-
-        if (manufacturers) {
-            const manufacturerList = manufacturers.split(',').map(item => item.trim());
-            motherboardConditions.push(`mf.name = ANY($${motherboardParamIndex}::text[])`);
-            motherboardParams.push(manufacturerList);
-            motherboardParamIndex++;
-        }
-        if (sockets) {
-            const socketList = sockets.split(',').map(item => item.trim());
-            motherboardConditions.push(`s.name = ANY($${motherboardParamIndex}::text[])`);
-            motherboardParams.push(socketList);
-            motherboardParamIndex++;
-        }
-        if (chipsets) {
-            const chipsetList = chipsets.split(',').map(item => item.trim());
-            motherboardConditions.push(`ch.name = ANY($${motherboardParamIndex}::text[])`);
-            motherboardParams.push(chipsetList);
-            motherboardParamIndex++;
-        }
-        if (formFactors) {
-            const formFactorList = formFactors.split(',').map(item => item.trim());
-            motherboardConditions.push(`ff.name = ANY($${motherboardParamIndex}::text[])`);
-            motherboardParams.push(formFactorList);
-            motherboardParamIndex++;
-        }
-        if (memoryTypes) {
-            const memoryTypeList = memoryTypes.split(',').map(item => item.trim());
-            motherboardConditions.push(`mt.name = ANY($${motherboardParamIndex}::text[])`);
-            motherboardParams.push(memoryTypeList);
-            motherboardParamIndex++;
-        }
-        if (ramSlots) {
-            const ramSlotsList = ramSlots.split(',').map(item => parseInt(item.trim()));
-            if (ramSlotsList.length > 0) {
-                motherboardConditions.push(`m.ram_slots = ANY($${motherboardParamIndex}::int[])`);
-                motherboardParams.push(ramSlotsList);
-                motherboardParamIndex++;
+            if (manufacturers) {
+                const manufacturerList = manufacturers.split(',').map(item => item.trim());
+                conditions.push(`m.name = ANY($${paramIndex}::text[]) AND m.id BETWEEN 1 AND 2`);
+                params.push(manufacturerList);
+                paramIndex++;
+            } else {
+                conditions.push(`m.id BETWEEN 1 AND 2`);
             }
-        }
-        if (ramChannels) {
-            const ramChannelsList = ramChannels.split(',').map(item => parseInt(item.trim()));
-            if (ramChannelsList.length > 0) {
-                motherboardConditions.push(`m.ram_channels = ANY($${motherboardParamIndex}::int[])`);
-                motherboardParams.push(ramChannelsList);
-                motherboardParamIndex++;
+            if (sockets) {
+                const socketList = sockets.split(',').map(item => item.trim());
+                conditions.push(`s.name = ANY($${paramIndex}::text[])`);
+                params.push(socketList);
+                paramIndex++;
             }
-        }
-        if (maxRamCapacity) {
-            const maxRamCapacityList = maxRamCapacity.split(',').map(item => parseInt(item.trim()));
-            if (maxRamCapacityList.length > 0) {
-                motherboardConditions.push(`m.max_ram_capacity = ANY($${motherboardParamIndex}::int[])`);
-                motherboardParams.push(maxRamCapacityList);
-                motherboardParamIndex++;
+            if (coreCountMin) {
+                conditions.push(`c.core_count >= $${paramIndex}`);
+                params.push(parseInt(coreCountMin));
+                paramIndex++;
             }
-        }
-        if (minRamFrequency) {
-            const minRamFrequencyList = minRamFrequency.split(',').map(item => parseInt(item.trim()));
-            if (minRamFrequencyList.length > 0) {
-                motherboardConditions.push(`m.min_ram_frequency = ANY($${motherboardParamIndex}::int[])`);
-                motherboardParams.push(minRamFrequencyList);
-                motherboardParamIndex++;
+            if (coreCountMax) {
+                conditions.push(`c.core_count <= $${paramIndex}`);
+                params.push(parseInt(coreCountMax));
+                paramIndex++;
             }
-        }
-        if (maxRamFrequency) {
-            const maxRamFrequencyList = maxRamFrequency.split(',').map(item => parseInt(item.trim()));
-            if (maxRamFrequencyList.length > 0) {
-                motherboardConditions.push(`m.max_ram_frequency = ANY($${motherboardParamIndex}::int[])`);
-                motherboardParams.push(maxRamFrequencyList);
-                motherboardParamIndex++;
+            if (threadCountMin) {
+                conditions.push(`c.thread_count >= $${paramIndex}`);
+                params.push(parseInt(threadCountMin));
+                paramIndex++;
             }
-        }
-        if (xmpSupport) {
-            motherboardConditions.push(`m.xmp_support = $${motherboardParamIndex}`);
-            motherboardParams.push(xmpSupport === 'true');
-            motherboardParamIndex++;
-        }
+            if (threadCountMax) {
+                conditions.push(`c.thread_count <= $${paramIndex}`);
+                params.push(parseInt(threadCountMax));
+                paramIndex++;
+            }
+            if (cacheL3Min) {
+                conditions.push(`c.cache_l3 >= $${paramIndex}`);
+                params.push(parseInt(cacheL3Min));
+                paramIndex++;
+            }
+            if (cacheL3Max) {
+                conditions.push(`c.cache_l3 <= $${paramIndex}`);
+                params.push(parseInt(cacheL3Max));
+                paramIndex++;
+            }
+            if (architectures) {
+                const architectureList = architectures.split(',').map(item => item.trim());
+                conditions.push(`ca.name = ANY($${paramIndex}::text[])`);
+                params.push(architectureList);
+                paramIndex++;
+            }
+            if (families) {
+                const familyList = families.split(',').map(item => item.trim());
+                conditions.push(`cf.name = ANY($${paramIndex}::text[])`);
+                params.push(familyList);
+                paramIndex++;
+            }
+            if (generations) {
+                const generationList = generations.split(',').map(item => item.trim());
+                conditions.push(`cg.name = ANY($${paramIndex}::text[])`);
+                params.push(generationList);
+                paramIndex++;
+            }
+            if (hasIntegratedGpu) {
+                conditions.push(`c.has_integrated_gpu = $${paramIndex}`);
+                params.push(hasIntegratedGpu === 'true');
+                paramIndex++;
+            }
+            if (unlockedMultiplier) {
+                conditions.push(`c.unlocked_multiplier = $${paramIndex}`);
+                params.push(unlockedMultiplier === 'true');
+                paramIndex++;
+            }
+            if (memoryTypes) {
+                const memoryTypeList = memoryTypes.split(',').map(item => item.trim());
+                conditions.push(`mt.name = ANY($${paramIndex}::text[])`);
+                params.push(memoryTypeList);
+                paramIndex++;
+            }
+            if (memoryMaxGbMin) {
+                conditions.push(`c.memory_max_gb >= $${paramIndex}`);
+                params.push(parseInt(memoryMaxGbMin));
+                paramIndex++;
+            }
+            if (memoryMaxGbMax) {
+                conditions.push(`c.memory_max_gb <= $${paramIndex}`);
+                params.push(parseInt(memoryMaxGbMax));
+                paramIndex++;
+            }
+            if (processNmMin) {
+                conditions.push(`c.process_nm >= $${paramIndex}`);
+                params.push(parseInt(processNmMin));
+                paramIndex++;
+            }
+            if (processNmMax) {
+                conditions.push(`c.process_nm <= $${paramIndex}`);
+                params.push(parseInt(processNmMax));
+                paramIndex++;
+            }
+            if (tdpMin) {
+                conditions.push(`c.tdp_watts >= $${paramIndex}`);
+                params.push(parseInt(tdpMin));
+                paramIndex++;
+            }
+            if (tdpMax) {
+                conditions.push(`c.tdp_watts <= $${paramIndex}`);
+                params.push(parseInt(tdpMax));
+                paramIndex++;
+            }
 
-        if (motherboardConditions.length > 0) {
-            motherboardQuery += ' WHERE ' + motherboardConditions.join(' AND ');
+            if (conditions.length > 0) {
+                query += ' WHERE ' + conditions.join(' AND ');
+            }
+
+            const cpuResult = await pool.query(query, params);
+            res.json({ cpus: cpuResult.rows, motherboards: [] });
+        } else if (type === 'motherboard') {
+            query = `
+                SELECT m.id, m.name
+                FROM motherboards m
+                JOIN manufacturers mf ON mf.id = m.manufacturer_id
+                JOIN sockets s ON s.id = m.socket_id
+                JOIN chipsets ch ON ch.id = m.chipset_id
+                JOIN form_factors ff ON ff.id = m.form_factor_id
+                JOIN memory_types mt ON mt.id = m.memory_type_id
+            `;
+            conditions = [];
+            params = [];
+            paramIndex = 1;
+
+            if (manufacturers) {
+                const manufacturerList = manufacturers.split(',').map(item => item.trim());
+                conditions.push(`mf.name = ANY($${paramIndex}::text[]) AND mf.id >= 3`);
+                params.push(manufacturerList);
+                paramIndex++;
+            } else {
+                conditions.push(`mf.id >= 3`);
+            }
+            if (sockets) {
+                const socketList = sockets.split(',').map(item => item.trim());
+                conditions.push(`s.name = ANY($${paramIndex}::text[])`);
+                params.push(socketList);
+                paramIndex++;
+            }
+            if (chipsets) {
+                const chipsetList = chipsets.split(',').map(item => item.trim());
+                conditions.push(`ch.name = ANY($${paramIndex}::text[])`);
+                params.push(chipsetList);
+                paramIndex++;
+            }
+            if (formFactors) {
+                const formFactorList = formFactors.split(',').map(item => item.trim());
+                conditions.push(`ff.name = ANY($${paramIndex}::text[])`);
+                params.push(formFactorList);
+                paramIndex++;
+            }
+            if (memoryTypes) {
+                const memoryTypeList = memoryTypes.split(',').map(item => item.trim());
+                conditions.push(`mt.name = ANY($${paramIndex}::text[])`);
+                params.push(memoryTypeList);
+                paramIndex++;
+            }
+            if (ramSlots) {
+                const ramSlotsList = ramSlots.split(',').map(item => parseInt(item.trim()));
+                if (ramSlotsList.length > 0) {
+                    conditions.push(`m.ram_slots = ANY($${paramIndex}::int[])`);
+                    params.push(ramSlotsList);
+                    paramIndex++;
+                }
+            }
+            if (ramChannels) {
+                const ramChannelsList = ramChannels.split(',').map(item => parseInt(item.trim()));
+                if (ramChannelsList.length > 0) {
+                    conditions.push(`m.ram_channels = ANY($${paramIndex}::int[])`);
+                    params.push(ramChannelsList);
+                    paramIndex++;
+                }
+            }
+            if (maxRamCapacity) {
+                const maxRamCapacityList = maxRamCapacity.split(',').map(item => parseInt(item.trim()));
+                if (maxRamCapacityList.length > 0) {
+                    conditions.push(`m.max_ram_capacity = ANY($${paramIndex}::int[])`);
+                    params.push(maxRamCapacityList);
+                    paramIndex++;
+                }
+            }
+            if (minRamFrequency) {
+                const minRamFrequencyList = minRamFrequency.split(',').map(item => parseInt(item.trim()));
+                if (minRamFrequencyList.length > 0) {
+                    conditions.push(`m.min_ram_frequency = ANY($${paramIndex}::int[])`);
+                    params.push(minRamFrequencyList);
+                    paramIndex++;
+                }
+            }
+            if (maxRamFrequency) {
+                const maxRamFrequencyList = maxRamFrequency.split(',').map(item => parseInt(item.trim()));
+                if (maxRamFrequencyList.length > 0) {
+                    conditions.push(`m.max_ram_frequency = ANY($${paramIndex}::int[])`);
+                    params.push(maxRamFrequencyList);
+                    paramIndex++;
+                }
+            }
+            if (xmpSupport) {
+                conditions.push(`m.xmp_support = $${paramIndex}`);
+                params.push(xmpSupport === 'true');
+                paramIndex++;
+            }
+
+            if (conditions.length > 0) {
+                query += ' WHERE ' + conditions.join(' AND ');
+            }
+
+            const motherboardResult = await pool.query(query, params);
+            res.json({ cpus: [], motherboards: motherboardResult.rows });
+        } else {
+            res.status(400).json({ error: 'Type parameter is required (cpu or motherboard)' });
         }
-
-        const [cpuResult, motherboardResult] = await Promise.all([
-            pool.query(cpuQuery, cpuParams),
-            pool.query(motherboardQuery, motherboardParams)
-        ]);
-
-        res.json({
-            cpus: cpuResult.rows,
-            motherboards: motherboardResult.rows
-        });
     } catch (err) {
         console.error('Error filtering components:', err.stack);
         res.status(500).json({ error: 'Database error', details: err.message });
@@ -367,7 +374,8 @@ app.get('/api/components/filter', async (req, res) => {
 app.get('/api/filter-options', async (req, res) => {
     try {
         const [
-            manufacturers,
+            manufacturersCpu,
+            manufacturersMotherboard,
             sockets,
             architectures,
             families,
@@ -378,7 +386,8 @@ app.get('/api/filter-options', async (req, res) => {
             cpuNumericRanges,
             motherboardNumericValues
         ] = await Promise.all([
-            pool.query('SELECT DISTINCT name FROM manufacturers ORDER BY name'),
+            pool.query('SELECT DISTINCT name FROM manufacturers WHERE id BETWEEN 1 AND 2 ORDER BY name'),
+            pool.query('SELECT DISTINCT name FROM manufacturers WHERE id >= 3 ORDER BY name'),
             pool.query('SELECT DISTINCT name FROM sockets ORDER BY name'),
             pool.query('SELECT DISTINCT name FROM cpu_architectures ORDER BY name'),
             pool.query('SELECT DISTINCT name FROM cpu_families ORDER BY name'),
@@ -390,7 +399,6 @@ app.get('/api/filter-options', async (req, res) => {
                 SELECT 
                     MIN(core_count) AS core_count_min, MAX(core_count) AS core_count_max,
                     MIN(thread_count) AS thread_count_min, MAX(thread_count) AS thread_count_max,
-                    MIN(base_frequency) AS frequency_min, MAX(max_frequency) AS frequency_max,
                     MIN(cache_l3) AS cache_l3_min, MAX(cache_l3) AS cache_l3_max,
                     MIN(memory_max_gb) AS memory_max_gb_min, MAX(memory_max_gb) AS memory_max_gb_max,
                     MIN(process_nm) AS process_nm_min, MAX(process_nm) AS process_nm_max,
@@ -405,7 +413,10 @@ app.get('/api/filter-options', async (req, res) => {
         ]);
 
         const options = {
-            manufacturers: manufacturers.rows.map(row => row.name),
+            manufacturers: {
+                cpu: manufacturersCpu.rows.map(row => row.name),
+                motherboard: manufacturersMotherboard.rows.map(row => row.name)
+            },
             sockets: sockets.rows.map(row => row.name),
             architectures: architectures.rows.map(row => row.name),
             families: families.rows.map(row => row.name),

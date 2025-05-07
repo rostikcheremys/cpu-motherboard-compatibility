@@ -17,7 +17,7 @@ import FilterListIcon from "@mui/icons-material/FilterList";
 
 export const FiltersSidebar = ({ open, onClose, onFilterChange, onMotherboardFilterChange }) => {
     const [filterOptions, setFilterOptions] = useState({
-        manufacturers: [],
+        manufacturers: { cpu: [], motherboard: [] },
         sockets: [],
         architectures: [],
         families: [],
@@ -40,7 +40,8 @@ export const FiltersSidebar = ({ open, onClose, onFilterChange, onMotherboardFil
         }
     });
 
-    const [selectedManufacturers, setSelectedManufacturers] = useState([]);
+    const [selectedManufacturersCpu, setSelectedManufacturersCpu] = useState([]);
+    const [selectedManufacturersMotherboard, setSelectedManufacturersMotherboard] = useState([]);
     const [selectedSockets, setSelectedSockets] = useState([]);
     const [coreCountRange, setCoreCountRange] = useState([1, 64]);
     const [threadCountRange, setThreadCountRange] = useState([1, 128]);
@@ -89,7 +90,10 @@ export const FiltersSidebar = ({ open, onClose, onFilterChange, onMotherboardFil
 
                     setFilterOptions((prev) => ({
                         ...prev,
-                        manufacturers: data.manufacturers || prev.manufacturers,
+                        manufacturers: {
+                            cpu: data.manufacturers.cpu || prev.manufacturers.cpu,
+                            motherboard: data.manufacturers.motherboard || prev.manufacturers.motherboard
+                        },
                         sockets: data.sockets || prev.sockets,
                         architectures: data.architectures || prev.architectures,
                         families: data.families || prev.families,
@@ -161,41 +165,49 @@ export const FiltersSidebar = ({ open, onClose, onFilterChange, onMotherboardFil
         }
     }, [open]);
 
-    const buildQueryParams = useCallback(() => {
+    const buildQueryParams = useCallback((type) => {
         const params = new URLSearchParams();
+        params.append('type', type);
 
-        if (selectedManufacturers.length > 0) params.append('manufacturers', selectedManufacturers.join(','));
-        if (selectedSockets.length > 0) params.append('sockets', selectedSockets.join(','));
-        if (coreCountRange[0] !== filterOptions.ranges.coreCount.min) params.append('coreCountMin', coreCountRange[0]);
-        if (coreCountRange[1] !== filterOptions.ranges.coreCount.max) params.append('coreCountMax', coreCountRange[1]);
-        if (threadCountRange[0] !== filterOptions.ranges.threadCount.min) params.append('threadCountMin', threadCountRange[0]);
-        if (threadCountRange[1] !== filterOptions.ranges.threadCount.max) params.append('threadCountMax', threadCountRange[1]);
-        if (cacheL3Range[0] !== filterOptions.ranges.cacheL3.min) params.append('cacheL3Min', cacheL3Range[0]);
-        if (cacheL3Range[1] !== filterOptions.ranges.cacheL3.max) params.append('cacheL3Max', cacheL3Range[1]);
-        if (selectedArchitectures.length > 0) params.append('architectures', selectedArchitectures.join(','));
-        if (selectedFamilies.length > 0) params.append('families', selectedFamilies.join(','));
-        if (selectedGenerations.length > 0) params.append('generations', selectedGenerations.join(','));
-        if (hasIntegratedGpu !== null) params.append('hasIntegratedGpu', hasIntegratedGpu);
-        if (unlockedMultiplier !== null) params.append('unlockedMultiplier', unlockedMultiplier);
-        if (selectedMemoryTypes.length > 0) params.append('memoryTypes', selectedMemoryTypes.join(','));
-        if (memoryMaxGbRange[0] !== filterOptions.ranges.memoryMaxGb.min) params.append('memoryMaxGbMin', memoryMaxGbRange[0]);
-        if (memoryMaxGbRange[1] !== filterOptions.ranges.memoryMaxGb.max) params.append('memoryMaxGbMax', memoryMaxGbRange[1]);
-        if (processNmRange[0] !== filterOptions.ranges.processNm.min) params.append('processNmMin', processNmRange[0]);
-        if (processNmRange[1] !== filterOptions.ranges.processNm.max) params.append('processNmMax', processNmRange[1]);
-        if (tdpRange[0] !== filterOptions.ranges.tdp.min) params.append('tdpMin', tdpRange[0]);
-        if (tdpRange[1] !== filterOptions.ranges.tdp.max) params.append('tdpMax', tdpRange[1]);
-        if (selectedChipsets.length > 0) params.append('chipsets', selectedChipsets.join(','));
-        if (selectedFormFactors.length > 0) params.append('formFactors', selectedFormFactors.join(','));
-        if (selectedRamSlots.length > 0) params.append('ramSlots', selectedRamSlots.join(','));
-        if (selectedRamChannels.length > 0) params.append('ramChannels', selectedRamChannels.join(','));
-        if (selectedMaxRamCapacity.length > 0) params.append('maxRamCapacity', selectedMaxRamCapacity.join(','));
-        if (selectedMinRamFrequency.length > 0) params.append('minRamFrequency', selectedMinRamFrequency.join(','));
-        if (selectedMaxRamFrequency.length > 0) params.append('maxRamFrequency', selectedMaxRamFrequency.join(','));
-        if (xmpSupport !== null) params.append('xmpSupport', xmpSupport);
+        if (type === 'cpu') {
+            if (selectedManufacturersCpu.length > 0) params.append('manufacturers', selectedManufacturersCpu.join(','));
+            if (selectedSockets.length > 0) params.append('sockets', selectedSockets.join(','));
+            if (coreCountRange[0] !== filterOptions.ranges.coreCount.min) params.append('coreCountMin', coreCountRange[0]);
+            if (coreCountRange[1] !== filterOptions.ranges.coreCount.max) params.append('coreCountMax', coreCountRange[1]);
+            if (threadCountRange[0] !== filterOptions.ranges.threadCount.min) params.append('threadCountMin', threadCountRange[0]);
+            if (threadCountRange[1] !== filterOptions.ranges.threadCount.max) params.append('threadCountMax', threadCountRange[1]);
+            if (cacheL3Range[0] !== filterOptions.ranges.cacheL3.min) params.append('cacheL3Min', cacheL3Range[0]);
+            if (cacheL3Range[1] !== filterOptions.ranges.cacheL3.max) params.append('cacheL3Max', cacheL3Range[1]);
+            if (selectedArchitectures.length > 0) params.append('architectures', selectedArchitectures.join(','));
+            if (selectedFamilies.length > 0) params.append('families', selectedFamilies.join(','));
+            if (selectedGenerations.length > 0) params.append('generations', selectedGenerations.join(','));
+            if (hasIntegratedGpu !== null) params.append('hasIntegratedGpu', hasIntegratedGpu);
+            if (unlockedMultiplier !== null) params.append('unlockedMultiplier', unlockedMultiplier);
+            if (selectedMemoryTypes.length > 0) params.append('memoryTypes', selectedMemoryTypes.join(','));
+            if (memoryMaxGbRange[0] !== filterOptions.ranges.memoryMaxGb.min) params.append('memoryMaxGbMin', memoryMaxGbRange[0]);
+            if (memoryMaxGbRange[1] !== filterOptions.ranges.memoryMaxGb.max) params.append('memoryMaxGbMax', memoryMaxGbRange[1]);
+            if (processNmRange[0] !== filterOptions.ranges.processNm.min) params.append('processNmMin', processNmRange[0]);
+            if (processNmRange[1] !== filterOptions.ranges.processNm.max) params.append('processNmMax', processNmRange[1]);
+            if (tdpRange[0] !== filterOptions.ranges.tdp.min) params.append('tdpMin', tdpRange[0]);
+            if (tdpRange[1] !== filterOptions.ranges.tdp.max) params.append('tdpMax', tdpRange[1]);
+        } else if (type === 'motherboard') {
+            if (selectedManufacturersMotherboard.length > 0) params.append('manufacturers', selectedManufacturersMotherboard.join(','));
+            if (selectedSockets.length > 0) params.append('sockets', selectedSockets.join(','));
+            if (selectedChipsets.length > 0) params.append('chipsets', selectedChipsets.join(','));
+            if (selectedFormFactors.length > 0) params.append('formFactors', selectedFormFactors.join(','));
+            if (selectedMemoryTypes.length > 0) params.append('memoryTypes', selectedMemoryTypes.join(','));
+            if (selectedRamSlots.length > 0) params.append('ramSlots', selectedRamSlots.join(','));
+            if (selectedRamChannels.length > 0) params.append('ramChannels', selectedRamChannels.join(','));
+            if (selectedMaxRamCapacity.length > 0) params.append('maxRamCapacity', selectedMaxRamCapacity.join(','));
+            if (selectedMinRamFrequency.length > 0) params.append('minRamFrequency', selectedMinRamFrequency.join(','));
+            if (selectedMaxRamFrequency.length > 0) params.append('maxRamFrequency', selectedMaxRamFrequency.join(','));
+            if (xmpSupport !== null) params.append('xmpSupport', xmpSupport);
+        }
 
         return params;
     }, [
-        selectedManufacturers,
+        selectedManufacturersCpu,
+        selectedManufacturersMotherboard,
         selectedSockets,
         coreCountRange,
         threadCountRange,
@@ -221,12 +233,17 @@ export const FiltersSidebar = ({ open, onClose, onFilterChange, onMotherboardFil
     ]);
 
     const fetchFilteredComponents = useCallback(async () => {
-        const params = buildQueryParams();
+        const cpuParams = buildQueryParams('cpu');
+        const motherboardParams = buildQueryParams('motherboard');
         try {
-            const response = await fetch(`http://localhost:3001/api/components/filter?${params.toString()}`);
-            const data = await response.json();
-            onFilterChange(data.cpus);
-            onMotherboardFilterChange(data.motherboards);
+            const [cpuResponse, motherboardResponse] = await Promise.all([
+                fetch(`http://localhost:3001/api/components/filter?${cpuParams.toString()}`),
+                fetch(`http://localhost:3001/api/components/filter?${motherboardParams.toString()}`)
+            ]);
+            const cpuData = await cpuResponse.json();
+            const motherboardData = await motherboardResponse.json();
+            onFilterChange(cpuData.cpus);
+            onMotherboardFilterChange(motherboardData.motherboards);
         } catch (error) {
             console.error('Error fetching filtered components:', error);
         }
@@ -264,6 +281,7 @@ export const FiltersSidebar = ({ open, onClose, onFilterChange, onMotherboardFil
         setShouldFetch(true);
     };
 
+
     return (
         <Drawer anchor="left" open={open} onClose={onClose}>
             <Box p={2} width={300} role="presentation">
@@ -282,14 +300,14 @@ export const FiltersSidebar = ({ open, onClose, onFilterChange, onMotherboardFil
                         <Typography>Manufacturer</Typography>
                     </AccordionSummary>
                     <AccordionDetails>
-                        {filterOptions.manufacturers.length > 0 ? (
-                            filterOptions.manufacturers.map((manufacturer) => (
+                        {filterOptions.manufacturers.cpu.length > 0 ? (
+                            filterOptions.manufacturers.cpu.map((manufacturer) => (
                                 <FormControlLabel
                                     key={manufacturer}
                                     control={
                                         <Checkbox
-                                            checked={selectedManufacturers.includes(manufacturer)}
-                                            onChange={() => handleCheckboxChange(setSelectedManufacturers, selectedManufacturers, manufacturer)}
+                                            checked={selectedManufacturersCpu.includes(manufacturer)}
+                                            onChange={() => handleCheckboxChange(setSelectedManufacturersCpu, selectedManufacturersCpu, manufacturer)}
                                         />
                                     }
                                     label={manufacturer}
@@ -605,6 +623,32 @@ export const FiltersSidebar = ({ open, onClose, onFilterChange, onMotherboardFil
                 <div className="filters-sidebar__label">
                     <Typography className="filters-sidebar__typography-component">Motherboard</Typography>
                 </div>
+
+                <Accordion className="filters-sidebar__accordion">
+                    <AccordionSummary expandIcon={<ExpandMoreIcon/>}>
+                        <Typography>Manufacturer</Typography>
+                    </AccordionSummary>
+                    <AccordionDetails>
+                        {filterOptions.manufacturers.motherboard.length > 0 ? (
+                            filterOptions.manufacturers.motherboard.map((manufacturer) => (
+                                <FormControlLabel
+                                    key={manufacturer}
+                                    control={
+                                        <Checkbox
+                                            checked={selectedManufacturersMotherboard.includes(manufacturer)}
+                                            onChange={() => handleCheckboxChange(setSelectedManufacturersMotherboard, selectedManufacturersMotherboard, manufacturer)}
+                                        />
+                                    }
+                                    label={manufacturer}
+                                />
+                            ))
+                        ) : (
+                            <Typography>No manufacturers available</Typography>
+                        )}
+                    </AccordionDetails>
+                </Accordion>
+
+                <Divider/>
 
                 <Accordion className="filters-sidebar__accordion">
                     <AccordionSummary expandIcon={<ExpandMoreIcon/>}>
