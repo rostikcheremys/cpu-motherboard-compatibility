@@ -12,7 +12,7 @@ import {
 
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 
-export const FilterAccordion = ({
+export const FiltersAccordion = ({
                              title,
                              options,
                              selectedValues,

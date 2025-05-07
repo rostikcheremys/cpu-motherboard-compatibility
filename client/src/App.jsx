@@ -6,7 +6,7 @@ import { CompatibilityCheck } from "./components/CompatibilityCheck/Compatibilit
 import { TableDetails } from "./components/TableDetails/TableDetails.jsx";
 import { Footer } from "./components/Footer/Footer.jsx";
 import { FiltersSidebar } from "./components/FiltersSidebar/FiltersSidebar.jsx";
-import {FilterButton} from "./components/FiltersSidebar/components/FilterButton/FilterButton.jsx";
+import {FiltersButton} from "./components/FiltersSidebar/components/FiltersButton/FiltersButton.jsx";
 
 export default function App() {
     const [darkMode, setDarkMode] = useState(false);
@@ -45,8 +45,6 @@ export default function App() {
                         toggleDarkMode={toggleDarkMode}
                     />
 
-                    <FilterButton setIsFilterOpen={setIsFilterOpen} />
-
                     <FiltersSidebar
                         open={isFilterOpen}
                         onClose={() => setIsFilterOpen(false)}
@@ -59,6 +57,7 @@ export default function App() {
                         setSelectedMotherboard={setSelectedMotherboard}
                         filteredCpus={filteredCpus}
                         filteredMotherboards={filteredMotherboards}
+                        setIsFilterOpen={setIsFilterOpen}
                     />
 
                     <TableDetails

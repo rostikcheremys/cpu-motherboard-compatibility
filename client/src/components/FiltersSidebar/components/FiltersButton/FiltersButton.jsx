@@ -1,10 +1,10 @@
-import "./FilterButton.css"
+import "./FiltersButton.css"
 
 import { Button } from "@mui/material";
 
 import FilterListIcon from "@mui/icons-material/FilterList";
 
-export const FilterButton = ({ setIsFilterOpen }) => {
+export const FiltersButton = ({ setIsFilterOpen }) => {
     return(
         <div className="filters-button">
             <Button
@@ -15,6 +15,7 @@ export const FilterButton = ({ setIsFilterOpen }) => {
                 <div className="filters-button__content">
                     <FilterListIcon className="filters-button__icon" />
                 </div>
+                Filters
             </Button>
         </div>
     );

@@ -1,6 +1,6 @@
 import { Divider, Typography } from "@mui/material";
 
-import { FilterAccordion } from "../../components/FilterAccordion/FilterAccordion.jsx";
+import { FiltersAccordion } from "../../components/FiltersAccordion/FiltersAccordion.jsx";
 
 export const CommonFilters = ({
                            filterOptions,
@@ -17,7 +17,7 @@ export const CommonFilters = ({
             <div className="filters-sidebar__label">
                 <Typography className="filters-sidebar__typography-component">Common</Typography>
             </div>
-            <FilterAccordion
+            <FiltersAccordion
                 title="Socket"
                 options={filterOptions.sockets}
                 selectedValues={selectedSockets}
@@ -28,7 +28,7 @@ export const CommonFilters = ({
                 handleCheckboxChange={handleCheckboxChange}
             />
             <Divider />
-            <FilterAccordion
+            <FiltersAccordion
                 title="Memory Type"
                 options={filterOptions.memoryTypes}
                 selectedValues={selectedMemoryTypes}

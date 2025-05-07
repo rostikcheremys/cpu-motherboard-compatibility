@@ -4,7 +4,7 @@ import { useState, useEffect, useCallback } from "react";
 
 import { Drawer, Box } from "@mui/material";
 
-import { FilterHeader } from "./components/FilterHeader/FilterHeader.jsx";
+import { FiltersHeader } from "./components/FiltersHeader/FiltersHeader.jsx";
 import { CommonFilters } from "./filters/CommonFilters/CommonFilters.jsx";
 import { CpuFilters } from "./filters/CPUFilters/CPUFilters.jsx";
 import { MotherboardFilters } from "./filters/MotherboardFilters/MotherboardFilters.jsx";
@@ -302,10 +302,37 @@ export const FiltersSidebar = ({ open, onClose, onFilterChange, onMotherboardFil
         onClose();
     };
 
+    const resetFilters = () => {
+        setSelectedManufacturersCpu([]);
+        setSelectedManufacturersMotherboard([]);
+        setSelectedSockets([]);
+        setCoreCountRange([filterOptions.ranges.coreCount.min, filterOptions.ranges.coreCount.max]);
+        setThreadCountRange([filterOptions.ranges.threadCount.min, filterOptions.ranges.threadCount.max]);
+        setCacheL3Range([filterOptions.ranges.cacheL3.min, filterOptions.ranges.cacheL3.max]);
+        setSelectedArchitectures([]);
+        setSelectedFamilies([]);
+        setSelectedGenerations([]);
+        setHasIntegratedGpu(null);
+        setUnlockedMultiplier(null);
+        setSelectedMemoryTypes([]);
+        setMemoryMaxGbRange([filterOptions.ranges.memoryMaxGb.min, filterOptions.ranges.memoryMaxGb.max]);
+        setProcessNmRange([filterOptions.ranges.processNm.min, filterOptions.ranges.processNm.max]);
+        setTdpRange([filterOptions.ranges.tdp.min, filterOptions.ranges.tdp.max]);
+        setSelectedChipsets([]);
+        setSelectedFormFactors([]);
+        setSelectedRamSlots([]);
+        setSelectedRamChannels([]);
+        setSelectedMaxRamCapacity([]);
+        setSelectedMinRamFrequency([]);
+        setSelectedMaxRamFrequency([]);
+        setXmpSupport(null);
+        setShouldFetch(true);
+    };
+
     return (
         <Drawer anchor="left" open={open} onClose={onClose}>
             <Box p={2} width={300} role="presentation">
-                <FilterHeader handleCloseSidebar={handleCloseSidebar} />
+                <FiltersHeader handleCloseSidebar={handleCloseSidebar} resetFilters={resetFilters} />
                 <CommonFilters
                     filterOptions={filterOptions}
                     selectedSockets={selectedSockets}

@@ -1,9 +1,10 @@
 import "./CompatibilityCheck.css";
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { FaCheckCircle, FaTimesCircle } from 'react-icons/fa';
 import { Select } from "../Select/Select.jsx";
+import {FiltersButton} from "../FiltersSidebar/components/FiltersButton/FiltersButton.jsx";
 
-export const CompatibilityCheck = ({ setSelectedCpu, setSelectedMotherboard, filteredCpus, filteredMotherboards }) => {
+export const CompatibilityCheck = ({ setSelectedCpu, setSelectedMotherboard, filteredCpus, filteredMotherboards, setIsFilterOpen }) => {
     const [cpuOptions, setCpuOptions] = useState([]);
     const [motherboardOptions, setMotherboardOptions] = useState([]);
     const [selectedCpu, setLocalSelectedCpu] = useState(null);
@@ -62,15 +63,19 @@ export const CompatibilityCheck = ({ setSelectedCpu, setSelectedMotherboard, fil
     return (
         <div className="compatibility-check">
             <div className="compatibility-check__wrapper">
-                <div className="compatibility-check__label-wrapper">
-                    <h3 className="compatibility-check__label">Check compatibility:</h3>
-                    {selectedCpu && selectedMotherboard && (
-                        isCompatible ? (
-                            <FaCheckCircle className="faCheckCircle"/>
-                        ) : (
-                            <FaTimesCircle className="faTimesCircle"/>
-                        )
-                    )}
+                <div className="compatibility-check__filters-button-wrapper">
+                    <div className="compatibility-check__label-wrapper">
+                        <h3 className="compatibility-check__label">Check compatibility:</h3>
+                        {selectedCpu && selectedMotherboard && (
+                            isCompatible ? (
+                                <FaCheckCircle className="faCheckCircle"/>
+                            ) : (
+                                <FaTimesCircle className="faTimesCircle"/>
+                            )
+                        )}
+                    </div>
+
+                    <FiltersButton setIsFilterOpen={setIsFilterOpen}/>
                 </div>
 
                 <div className="compatibility-check__select-wrapper">

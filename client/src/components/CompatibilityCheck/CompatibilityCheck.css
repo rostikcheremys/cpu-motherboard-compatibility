@@ -11,7 +11,14 @@
 .compatibility-check__label-wrapper {
     display: flex;
     flex-direction: row;
+    align-items: center;
     gap: 10px;
+}
+
+.compatibility-check__filters-button-wrapper {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
 }
 
 .compatibility-check__label {

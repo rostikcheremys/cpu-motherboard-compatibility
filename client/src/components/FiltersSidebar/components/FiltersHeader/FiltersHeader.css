@@ -1,0 +1,21 @@
+.filters-header__title {
+    display: flex;
+    justify-content: space-between;
+}
+
+.filters-header__filters-icon,
+.filters-header__close-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.filters-header__icon {
+    font-size: 30px !important;
+    margin-right: 5px;
+}
+
+.filters-header__close-icon {
+    cursor: pointer;
+}
+

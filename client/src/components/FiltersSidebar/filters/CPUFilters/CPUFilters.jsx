@@ -1,6 +1,6 @@
 import { Divider, Typography } from "@mui/material";
 
-import { FilterAccordion } from "../../components/FilterAccordion/FilterAccordion.jsx";
+import { FiltersAccordion } from "../../components/FiltersAccordion/FiltersAccordion.jsx";
 
 export const CpuFilters = ({
                         filterOptions,
@@ -38,7 +38,7 @@ export const CpuFilters = ({
             <div className="filters-sidebar__label">
                 <Typography className="filters-sidebar__typography-component">CPU</Typography>
             </div>
-            <FilterAccordion
+            <FiltersAccordion
                 title="Manufacturer"
                 options={filterOptions.manufacturers.cpu}
                 selectedValues={selectedManufacturersCpu}
@@ -50,7 +50,7 @@ export const CpuFilters = ({
             />
             <Divider />
             <Divider />
-            <FilterAccordion
+            <FiltersAccordion
                 title="Core Count"
                 range={coreCountRange}
                 setRange={setCoreCountRange}
@@ -62,7 +62,7 @@ export const CpuFilters = ({
                 handleRangeChangeCommitted={handleRangeChangeCommitted}
             />
             <Divider />
-            <FilterAccordion
+            <FiltersAccordion
                 title="Thread Count"
                 range={threadCountRange}
                 setRange={setThreadCountRange}
@@ -74,7 +74,7 @@ export const CpuFilters = ({
                 handleRangeChangeCommitted={handleRangeChangeCommitted}
             />
             <Divider />
-            <FilterAccordion
+            <FiltersAccordion
                 title="Cache L3 (MB)"
                 range={cacheL3Range}
                 setRange={setCacheL3Range}
@@ -86,7 +86,7 @@ export const CpuFilters = ({
                 handleRangeChangeCommitted={handleRangeChangeCommitted}
             />
             <Divider />
-            <FilterAccordion
+            <FiltersAccordion
                 title="Architecture"
                 options={filterOptions.architectures}
                 selectedValues={selectedArchitectures}
@@ -97,7 +97,7 @@ export const CpuFilters = ({
                 handleCheckboxChange={handleCheckboxChange}
             />
             <Divider />
-            <FilterAccordion
+            <FiltersAccordion
                 title="Family"
                 options={filterOptions.families}
                 selectedValues={selectedFamilies}
@@ -108,7 +108,7 @@ export const CpuFilters = ({
                 handleCheckboxChange={handleCheckboxChange}
             />
             <Divider />
-            <FilterAccordion
+            <FiltersAccordion
                 title="Generation"
                 options={filterOptions.generations}
                 selectedValues={selectedGenerations}
@@ -119,7 +119,7 @@ export const CpuFilters = ({
                 handleCheckboxChange={handleCheckboxChange}
             />
             <Divider />
-            <FilterAccordion
+            <FiltersAccordion
                 title="Has Integrated GPU"
                 selectedValues={hasIntegratedGpu}
                 setSelectedValues={setHasIntegratedGpu}
@@ -129,7 +129,7 @@ export const CpuFilters = ({
                 handleBooleanChange={handleBooleanChange}
             />
             <Divider />
-            <FilterAccordion
+            <FiltersAccordion
                 title="Unlocked Multiplier"
                 selectedValues={unlockedMultiplier}
                 setSelectedValues={setUnlockedMultiplier}
@@ -139,7 +139,7 @@ export const CpuFilters = ({
                 handleBooleanChange={handleBooleanChange}
             />
             <Divider />
-            <FilterAccordion
+            <FiltersAccordion
                 title="Process (nm)"
                 range={processNmRange}
                 setRange={setProcessNmRange}
@@ -151,7 +151,7 @@ export const CpuFilters = ({
                 handleRangeChangeCommitted={handleRangeChangeCommitted}
             />
             <Divider />
-            <FilterAccordion
+            <FiltersAccordion
                 title="TDP (Watts)"
                 range={tdpRange}
                 setRange={setTdpRange}

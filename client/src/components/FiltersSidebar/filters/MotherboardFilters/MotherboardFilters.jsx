@@ -1,6 +1,6 @@
 import { Divider, Typography } from "@mui/material";
 
-import { FilterAccordion } from "../../components/FilterAccordion/FilterAccordion.jsx";
+import { FiltersAccordion } from "../../components/FiltersAccordion/FiltersAccordion.jsx";
 
 export const MotherboardFilters = ({
                                 filterOptions,
@@ -32,7 +32,7 @@ export const MotherboardFilters = ({
             <div className="filters-sidebar__label">
                 <Typography className="filters-sidebar__typography-component">Motherboard</Typography>
             </div>
-            <FilterAccordion
+            <FiltersAccordion
                 title="Manufacturer"
                 options={filterOptions.manufacturers.motherboard}
                 selectedValues={selectedManufacturersMotherboard}
@@ -43,7 +43,7 @@ export const MotherboardFilters = ({
                 handleCheckboxChange={handleCheckboxChange}
             />
             <Divider />
-            <FilterAccordion
+            <FiltersAccordion
                 title="Chipset"
                 options={filterOptions.chipsets}
                 selectedValues={selectedChipsets}
@@ -54,7 +54,7 @@ export const MotherboardFilters = ({
                 handleCheckboxChange={handleCheckboxChange}
             />
             <Divider />
-            <FilterAccordion
+            <FiltersAccordion
                 title="Form Factor"
                 options={filterOptions.formFactors}
                 selectedValues={selectedFormFactors}
@@ -65,7 +65,7 @@ export const MotherboardFilters = ({
                 handleCheckboxChange={handleCheckboxChange}
             />
             <Divider />
-            <FilterAccordion
+            <FiltersAccordion
                 title="RAM Slots"
                 options={filterOptions.ranges.ramSlots}
                 selectedValues={selectedRamSlots}
@@ -76,7 +76,7 @@ export const MotherboardFilters = ({
                 handleCheckboxChange={handleCheckboxChange}
             />
             <Divider />
-            <FilterAccordion
+            <FiltersAccordion
                 title="RAM Channels"
                 options={filterOptions.ranges.ramChannels}
                 selectedValues={selectedRamChannels}
@@ -87,7 +87,7 @@ export const MotherboardFilters = ({
                 handleCheckboxChange={handleCheckboxChange}
             />
             <Divider />
-            <FilterAccordion
+            <FiltersAccordion
                 title="RAM Capacity (GB)"
                 options={filterOptions.ranges.maxRamCapacity}
                 selectedValues={selectedMaxRamCapacity}
@@ -98,7 +98,7 @@ export const MotherboardFilters = ({
                 handleCheckboxChange={handleCheckboxChange}
             />
             <Divider />
-            <FilterAccordion
+            <FiltersAccordion
                 title="Min RAM Frequency (MHz)"
                 options={filterOptions.ranges.minRamFrequency}
                 selectedValues={selectedMinRamFrequency}
@@ -109,7 +109,7 @@ export const MotherboardFilters = ({
                 handleCheckboxChange={handleCheckboxChange}
             />
             <Divider />
-            <FilterAccordion
+            <FiltersAccordion
                 title="Max RAM Frequency (MHz)"
                 options={filterOptions.ranges.maxRamFrequency}
                 selectedValues={selectedMaxRamFrequency}
@@ -120,7 +120,7 @@ export const MotherboardFilters = ({
                 handleCheckboxChange={handleCheckboxChange}
             />
             <Divider />
-            <FilterAccordion
+            <FiltersAccordion
                 title="XMP Support"
                 selectedValues={xmpSupport}
                 setSelectedValues={setXmpSupport}
