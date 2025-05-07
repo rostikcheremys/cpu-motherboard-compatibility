@@ -261,9 +261,9 @@ app.get('/api/components/filter', async (req, res) => {
             if (conditions.length > 0) {
                 query += ' WHERE ' + conditions.join(' AND ');
             }
-            console.log('CPU Query:', query, params); // Додали логування для відладки
+            console.log('CPU Query:', query, params);
             const cpuResult = await pool.query(query, params);
-            console.log('CPU Result:', cpuResult.rows.length); // Логування кількості результатів
+            console.log('CPU Result:', cpuResult.rows.length);
             res.json({ cpus: cpuResult.rows, motherboards: [] });
         } else if (type === 'motherboard') {
             query = `
@@ -360,9 +360,9 @@ app.get('/api/components/filter', async (req, res) => {
             if (conditions.length > 0) {
                 query += ' WHERE ' + conditions.join(' AND ');
             }
-            console.log('Motherboard Query:', query, params); // Додали логування для відладки
+            console.log('Motherboard Query:', query, params);
             const motherboardResult = await pool.query(query, params);
-            console.log('Motherboard Result:', motherboardResult.rows.length); // Логування кількості результатів
+            console.log('Motherboard Result:', motherboardResult.rows.length);
             res.json({ cpus: [], motherboards: motherboardResult.rows });
         } else {
             res.status(400).json({ error: 'Type parameter is required (cpu or motherboard)' });

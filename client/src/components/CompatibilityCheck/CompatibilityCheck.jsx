@@ -11,26 +11,26 @@ export const CompatibilityCheck = ({ setSelectedCpu, setSelectedMotherboard, fil
     const [isCompatible, setIsCompatible] = useState(null);
 
     useEffect(() => {
-        if (filteredCpus && filteredCpus.length > 0) {
-            setCpuOptions(filteredCpus);
-        } else {
-            fetch('http://localhost:3001/api/cpus')
-                .then((response) => response.json())
-                .then((data) => setCpuOptions(data))
-                .catch((error) => console.error('Error fetching CPUs:', error));
+        if (filteredCpus !== undefined) {
+            setCpuOptions(filteredCpus.length > 0 ? filteredCpus : []);
+            if (filteredCpus.length === 0 && selectedCpu !== null) {
+                setLocalSelectedCpu(null);
+                setSelectedCpu(null);
+                setIsCompatible(null);
+            }
         }
-    }, [filteredCpus]);
+    }, [filteredCpus, selectedCpu, setSelectedCpu]);
 
     useEffect(() => {
-        if (filteredMotherboards && filteredMotherboards.length > 0) {
-            setMotherboardOptions(filteredMotherboards);
-        } else {
-            fetch('http://localhost:3001/api/motherboards')
-                .then((response) => response.json())
-                .then((data) => setMotherboardOptions(data))
-                .catch((error) => console.error('Error fetching motherboards:', error));
+        if (filteredMotherboards !== undefined) {
+            setMotherboardOptions(filteredMotherboards.length > 0 ? filteredMotherboards : []);
+            if (filteredMotherboards.length === 0 && selectedMotherboard !== null) {
+                setLocalSelectedMotherboard(null);
+                setSelectedMotherboard(null);
+                setIsCompatible(null);
+            }
         }
-    }, [filteredMotherboards]);
+    }, [filteredMotherboards, selectedMotherboard, setSelectedMotherboard]);
 
     useEffect(() => {
         if (selectedCpu && selectedMotherboard) {
@@ -48,28 +48,6 @@ export const CompatibilityCheck = ({ setSelectedCpu, setSelectedMotherboard, fil
             setIsCompatible(null);
         }
     }, [selectedCpu, selectedMotherboard]);
-
-    useEffect(() => {
-        if (selectedCpu && filteredCpus.length > 0) {
-            const isCpuStillValid = filteredCpus.some((cpu) => cpu.id === selectedCpu.id);
-            if (!isCpuStillValid) {
-                setLocalSelectedCpu(null);
-                setSelectedCpu(null);
-                setIsCompatible(null);
-            }
-        }
-    }, [filteredCpus, selectedCpu, setSelectedCpu]);
-
-    useEffect(() => {
-        if (selectedMotherboard && filteredMotherboards.length > 0) {
-            const isMotherboardStillValid = filteredMotherboards.some((mb) => mb.id === selectedMotherboard.id);
-            if (!isMotherboardStillValid) {
-                setLocalSelectedMotherboard(null);
-                setSelectedMotherboard(null);
-                setIsCompatible(null);
-            }
-        }
-    }, [filteredMotherboards, selectedMotherboard, setSelectedMotherboard]);
 
     const handleCpuSelect = (cpu) => {
         setLocalSelectedCpu(cpu);
@@ -116,5 +94,3 @@ export const CompatibilityCheck = ({ setSelectedCpu, setSelectedMotherboard, fil
         </div>
     );
 };
-
-

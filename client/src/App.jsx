@@ -28,11 +28,11 @@ export default function App() {
     };
 
     const handleFilterChange = (filteredData) => {
-        setFilteredCpus(filteredData);
+        setFilteredCpus(filteredData|| []);
     };
 
     const handleMotherboardFilterChange = (filteredData) => {
-        setFilteredMotherboards(filteredData);
+        setFilteredMotherboards(filteredData || []);
     };
 
     return (

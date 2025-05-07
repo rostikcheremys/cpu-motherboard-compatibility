@@ -1,12 +1,17 @@
 import './Select.css';
-
-import { useState } from 'react';
-
+import { useState, useEffect } from 'react';
 import TextField from '@mui/material/TextField';
 import Autocomplete from '@mui/material/Autocomplete';
 
 export const Select = ({ options, onSelect }) => {
     const [value, setValue] = useState(null);
+
+    useEffect(() => {
+        if (options.length === 0 && value !== null) {
+            setValue(null);
+            onSelect(null);
+        }
+    }, [options, value, onSelect]);
 
     const handleChange = (event, newValue) => {
         setValue(newValue);
@@ -23,6 +28,7 @@ export const Select = ({ options, onSelect }) => {
                 renderInput={(params) =>
                     <TextField {...params} variant="outlined" />
                 }
+                isOptionEqualToValue={(option, value) => option?.id === value?.id}
             />
         </div>
     );
