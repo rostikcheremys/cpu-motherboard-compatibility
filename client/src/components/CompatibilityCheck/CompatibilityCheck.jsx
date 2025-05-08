@@ -88,7 +88,7 @@ export const CompatibilityCheck = ({ setSelectedCpu, setSelectedMotherboard, fil
                     </div>
 
                     <div className="compatibility-check__select">
-                        <h5 className="compatibility-check__hint">Select motherboard</h5>
+                        <h5 className="compatibility-check__hint">Select motherboard:</h5>
                         <Select
                             options={motherboardOptions}
                             onSelect={handleMotherboardSelect}

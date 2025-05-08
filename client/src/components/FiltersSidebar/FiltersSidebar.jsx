@@ -60,103 +60,121 @@ export const FiltersSidebar = ({ open, onClose, onFilterChange, onMotherboardFil
     const [shouldFetch, setShouldFetch] = useState(false);
     const [expandedAccordions, setExpandedAccordions] = useState(new Set());
 
+    // Завантаження даних один раз при монтуванні компонента
     useEffect(() => {
-        if (open) {
-            const fetchFilterOptions = async () => {
-                try {
-                    const response = await fetch('http://localhost:3001/api/filter-options');
-                    if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
-                    const data = await response.json();
+        const fetchInitialData = async () => {
+            try {
+                // Завантаження опцій фільтрів
+                const response = await fetch('http://localhost:3001/api/filter-options');
+                if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
+                const data = await response.json();
 
-                    const ramSlots = Array.isArray(data.ranges?.ramSlots)
-                        ? [...new Set(data.ranges.ramSlots.map(Number))]
-                        : [];
-                    const ramChannels = Array.isArray(data.ranges?.ramChannels)
-                        ? [...new Set(data.ranges.ramChannels.map(Number))]
-                        : [];
-                    const maxRamCapacity = Array.isArray(data.ranges?.maxRamCapacity)
-                        ? [...new Set(data.ranges.maxRamCapacity.map(Number))]
-                        : [];
-                    const minRamFrequency = Array.isArray(data.ranges?.minRamFrequency)
-                        ? [...new Set(data.ranges.minRamFrequency.map(Number))]
-                        : [];
-                    const maxRamFrequency = Array.isArray(data.ranges?.maxRamFrequency)
-                        ? [...new Set(data.ranges.maxRamFrequency.map(Number))]
-                        : [];
+                const ramSlots = Array.isArray(data.ranges?.ramSlots)
+                    ? [...new Set(data.ranges.ramSlots.map(Number))]
+                    : [];
+                const ramChannels = Array.isArray(data.ranges?.ramChannels)
+                    ? [...new Set(data.ranges.ramChannels.map(Number))]
+                    : [];
+                const maxRamCapacity = Array.isArray(data.ranges?.maxRamCapacity)
+                    ? [...new Set(data.ranges.maxRamCapacity.map(Number))]
+                    : [];
+                const minRamFrequency = Array.isArray(data.ranges?.minRamFrequency)
+                    ? [...new Set(data.ranges.minRamFrequency.map(Number))]
+                    : [];
+                const maxRamFrequency = Array.isArray(data.ranges?.maxRamFrequency)
+                    ? [...new Set(data.ranges.maxRamFrequency.map(Number))]
+                    : [];
 
-                    setFilterOptions((prev) => ({
-                        ...prev,
-                        manufacturers: {
-                            cpu: data.manufacturers.cpu || prev.manufacturers.cpu,
-                            motherboard: data.manufacturers.motherboard || prev.manufacturers.motherboard
-                        },
-                        sockets: data.sockets || prev.sockets,
-                        architectures: data.architectures || prev.architectures,
-                        families: data.families || prev.families,
-                        generations: data.generations || prev.generations,
-                        memoryTypes: data.memoryTypes || prev.memoryTypes,
-                        chipsets: data.chipsets || prev.chipsets,
-                        formFactors: data.formFactors || prev.formFactors,
-                        ranges: {
-                            ...prev.ranges,
-                            coreCount: data.ranges?.coreCount || prev.ranges.coreCount,
-                            threadCount: data.ranges?.threadCount || prev.ranges.threadCount,
-                            cacheL3: data.ranges?.cacheL3 || prev.ranges.cacheL3,
-                            memoryMaxGb: data.ranges?.memoryMaxGb || prev.ranges.memoryMaxGb,
-                            processNm: data.ranges?.processNm || prev.ranges.processNm,
-                            tdp: data.ranges?.tdp || prev.ranges.tdp,
-                            ramSlots,
-                            ramChannels,
-                            maxRamCapacity,
-                            minRamFrequency,
-                            maxRamFrequency
-                        }
-                    }));
+                setFilterOptions((prev) => ({
+                    ...prev,
+                    manufacturers: {
+                        cpu: data.manufacturers.cpu || prev.manufacturers.cpu,
+                        motherboard: data.manufacturers.motherboard || prev.manufacturers.motherboard
+                    },
+                    sockets: data.sockets || prev.sockets,
+                    architectures: data.architectures || prev.architectures,
+                    families: data.families || prev.families,
+                    generations: data.generations || prev.generations,
+                    memoryTypes: data.memoryTypes || prev.memoryTypes,
+                    chipsets: data.chipsets || prev.chipsets,
+                    formFactors: data.formFactors || prev.formFactors,
+                    ranges: {
+                        ...prev.ranges,
+                        coreCount: data.ranges?.coreCount || prev.ranges.coreCount,
+                        threadCount: data.ranges?.threadCount || prev.ranges.threadCount,
+                        cacheL3: data.ranges?.cacheL3 || prev.ranges.cacheL3,
+                        memoryMaxGb: data.ranges?.memoryMaxGb || prev.ranges.memoryMaxGb,
+                        processNm: data.ranges?.processNm || prev.ranges.processNm,
+                        tdp: data.ranges?.tdp || prev.ranges.tdp,
+                        ramSlots,
+                        ramChannels,
+                        maxRamCapacity,
+                        minRamFrequency,
+                        maxRamFrequency
+                    }
+                }));
 
-                    if (coreCountRange[0] === filterOptions.ranges.coreCount.min && coreCountRange[1] === filterOptions.ranges.coreCount.max) {
-                        setCoreCountRange([
-                            data.ranges?.coreCount?.min || filterOptions.ranges.coreCount.min,
-                            data.ranges?.coreCount?.max || filterOptions.ranges.coreCount.max
-                        ]);
-                    }
-                    if (threadCountRange[0] === filterOptions.ranges.threadCount.min && threadCountRange[1] === filterOptions.ranges.threadCount.max) {
-                        setThreadCountRange([
-                            data.ranges?.threadCount?.min || filterOptions.ranges.threadCount.min,
-                            data.ranges?.threadCount?.max || filterOptions.ranges.threadCount.max
-                        ]);
-                    }
-                    if (cacheL3Range[0] === filterOptions.ranges.cacheL3.min && cacheL3Range[1] === filterOptions.ranges.cacheL3.max) {
-                        setCacheL3Range([
-                            data.ranges?.cacheL3?.min || filterOptions.ranges.cacheL3.min,
-                            data.ranges?.cacheL3?.max || filterOptions.ranges.cacheL3.max
-                        ]);
-                    }
-                    if (memoryMaxGbRange[0] === filterOptions.ranges.memoryMaxGb.min && memoryMaxGbRange[1] === filterOptions.ranges.memoryMaxGb.max) {
-                        setMemoryMaxGbRange([
-                            data.ranges?.memoryMaxGb?.min || filterOptions.ranges.memoryMaxGb.min,
-                            data.ranges?.memoryMaxGb?.max || filterOptions.ranges.memoryMaxGb.max
-                        ]);
-                    }
-                    if (processNmRange[0] === filterOptions.ranges.processNm.min && processNmRange[1] === filterOptions.ranges.processNm.max) {
-                        setProcessNmRange([
-                            data.ranges?.processNm?.min || filterOptions.ranges.processNm.min,
-                            data.ranges?.processNm?.max || filterOptions.ranges.processNm.max
-                        ]);
-                    }
-                    if (tdpRange[0] === filterOptions.ranges.tdp.min && tdpRange[1] === filterOptions.ranges.tdp.max) {
-                        setTdpRange([
-                            data.ranges?.tdp?.min || filterOptions.ranges.tdp.min,
-                            data.ranges?.tdp?.max || filterOptions.ranges.tdp.max
-                        ]);
-                    }
-
-                    setShouldFetch(true);
-                } catch (error) {
-                    console.error('Error fetching filter options:', error);
+                if (coreCountRange[0] === filterOptions.ranges.coreCount.min && coreCountRange[1] === filterOptions.ranges.coreCount.max) {
+                    setCoreCountRange([
+                        data.ranges?.coreCount?.min || filterOptions.ranges.coreCount.min,
+                        data.ranges?.coreCount?.max || filterOptions.ranges.coreCount.max
+                    ]);
                 }
-            };
-            fetchFilterOptions();
-        } else {
+                if (threadCountRange[0] === filterOptions.ranges.threadCount.min && threadCountRange[1] === filterOptions.ranges.threadCount.max) {
+                    setThreadCountRange([
+                        data.ranges?.threadCount?.min || filterOptions.ranges.threadCount.min,
+                        data.ranges?.threadCount?.max || filterOptions.ranges.threadCount.max
+                    ]);
+                }
+                if (cacheL3Range[0] === filterOptions.ranges.cacheL3.min && cacheL3Range[1] === filterOptions.ranges.cacheL3.max) {
+                    setCacheL3Range([
+                        data.ranges?.cacheL3?.min || filterOptions.ranges.cacheL3.min,
+                        data.ranges?.cacheL3?.max || filterOptions.ranges.cacheL3.max
+                    ]);
+                }
+                if (memoryMaxGbRange[0] === filterOptions.ranges.memoryMaxGb.min && memoryMaxGbRange[1] === filterOptions.ranges.memoryMaxGb.max) {
+                    setMemoryMaxGbRange([
+                        data.ranges?.memoryMaxGb?.min || filterOptions.ranges.memoryMaxGb.min,
+                        data.ranges?.memoryMaxGb?.max || filterOptions.ranges.memoryMaxGb.max
+                    ]);
+                }
+                if (processNmRange[0] === filterOptions.ranges.processNm.min && processNmRange[1] === filterOptions.ranges.processNm.max) {
+                    setProcessNmRange([
+                        data.ranges?.processNm?.min || filterOptions.ranges.processNm.min,
+                        data.ranges?.processNm?.max || filterOptions.ranges.processNm.max
+                    ]);
+                }
+                if (tdpRange[0] === filterOptions.ranges.tdp.min && tdpRange[1] === filterOptions.ranges.tdp.max) {
+                    setTdpRange([
+                        data.ranges?.tdp?.min || filterOptions.ranges.tdp.min,
+                        data.ranges?.tdp?.max || filterOptions.ranges.tdp.max
+                    ]);
+                }
+
+                // Початкове завантаження всіх компонентів без фільтрів
+                const cpuParams = new URLSearchParams({ type: 'cpu' });
+                const motherboardParams = new URLSearchParams({ type: 'motherboard' });
+                const [cpuResponse, motherboardResponse] = await Promise.all([
+                    fetch(`http://localhost:3001/api/components/filter?${cpuParams.toString()}`),
+                    fetch(`http://localhost:3001/api/components/filter?${motherboardParams.toString()}`)
+                ]);
+                if (!cpuResponse.ok) throw new Error(`CPU fetch error: ${cpuResponse.status}`);
+                if (!motherboardResponse.ok) throw new Error(`Motherboard fetch error: ${motherboardResponse.status}`);
+                const cpuData = await cpuResponse.json();
+                const motherboardData = await motherboardResponse.json();
+                console.log('Initial CPU Data:', cpuData);
+                console.log('Initial Motherboard Data:', motherboardData);
+                onFilterChange(cpuData.cpus);
+                onMotherboardFilterChange(motherboardData.motherboards);
+            } catch (error) {
+                console.error('Error fetching initial data:', error);
+            }
+        };
+        fetchInitialData();
+    }, []); // Порожній масив залежностей для виконання один раз при монтуванні
+
+    useEffect(() => {
+        if (!open) {
             const currentExpanded = new Set();
             Array.from(document.querySelectorAll('.filters-sidebar__accordion')).forEach((accordion) => {
                 if (accordion.querySelector('.Mui-expanded')) {
