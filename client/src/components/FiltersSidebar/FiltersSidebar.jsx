@@ -60,11 +60,9 @@ export const FiltersSidebar = ({ open, onClose, onFilterChange, onMotherboardFil
     const [shouldFetch, setShouldFetch] = useState(false);
     const [expandedAccordions, setExpandedAccordions] = useState(new Set());
 
-    // Завантаження даних один раз при монтуванні компонента
     useEffect(() => {
         const fetchInitialData = async () => {
             try {
-                // Завантаження опцій фільтрів
                 const response = await fetch('http://localhost:3001/api/filter-options');
                 if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
                 const data = await response.json();
@@ -151,7 +149,6 @@ export const FiltersSidebar = ({ open, onClose, onFilterChange, onMotherboardFil
                     ]);
                 }
 
-                // Початкове завантаження всіх компонентів без фільтрів
                 const cpuParams = new URLSearchParams({ type: 'cpu' });
                 const motherboardParams = new URLSearchParams({ type: 'motherboard' });
                 const [cpuResponse, motherboardResponse] = await Promise.all([
@@ -171,7 +168,7 @@ export const FiltersSidebar = ({ open, onClose, onFilterChange, onMotherboardFil
             }
         };
         fetchInitialData();
-    }, []); // Порожній масив залежностей для виконання один раз при монтуванні
+    }, []);
 
     useEffect(() => {
         if (!open) {
