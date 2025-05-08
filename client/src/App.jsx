@@ -1,20 +1,14 @@
-import './App.css';
-import React, { useState, useMemo } from "react";
-import {ThemeProvider, createTheme, CssBaseline, Button} from '@mui/material';
-import { Header } from "./components/Header/Header.jsx";
-import { CompatibilityCheck } from "./components/CompatibilityCheck/CompatibilityCheck.jsx";
-import { TableDetails } from "./components/TableDetails/TableDetails.jsx";
-import { Footer } from "./components/Footer/Footer.jsx";
-import { FiltersSidebar } from "./components/FiltersSidebar/FiltersSidebar.jsx";
-import {FiltersButton} from "./components/FiltersSidebar/components/FiltersButton/FiltersButton.jsx";
+import { useState, useMemo } from "react";
+import { Routes, Route, BrowserRouter } from "react-router-dom";
+
+import { ThemeProvider, createTheme, CssBaseline } from "@mui/material";
+
+import { Home } from "./components/Home/Home.jsx";
+
+import { EditDatabase } from './components/Admin/EditDatabase.jsx';
 
 export default function App() {
     const [darkMode, setDarkMode] = useState(false);
-    const [selectedCpu, setSelectedCpu] = useState(null);
-    const [selectedMotherboard, setSelectedMotherboard] = useState(null);
-    const [isFilterOpen, setIsFilterOpen] = useState(false);
-    const [filteredCpus, setFilteredCpus] = useState([]);
-    const [filteredMotherboards, setFilteredMotherboards] = useState([]);
 
     const theme = useMemo(() =>
         createTheme({
@@ -23,50 +17,21 @@ export default function App() {
             },
         }), [darkMode]);
 
-    const toggleDarkMode = () => {
-        setDarkMode(prev => !prev);
-    };
-
-    const handleFilterChange = (filteredData) => {
-        setFilteredCpus(filteredData|| []);
-    };
-
-    const handleMotherboardFilterChange = (filteredData) => {
-        setFilteredMotherboards(filteredData || []);
-    };
-
     return (
         <ThemeProvider theme={theme}>
-            <CssBaseline/>
-            <div className="app-container">
-                <div className="app-container__content">
-                    <Header
-                        darkMode={darkMode}
-                        toggleDarkMode={toggleDarkMode}
+            <CssBaseline />
+            <BrowserRouter>
+                <Routes>
+                    <Route
+                        path="/"
+                        element={<Home darkMode={darkMode} setDarkMode={setDarkMode} />}
                     />
-
-                    <FiltersSidebar
-                        open={isFilterOpen}
-                        onClose={() => setIsFilterOpen(false)}
-                        onFilterChange={handleFilterChange}
-                        onMotherboardFilterChange={handleMotherboardFilterChange}
+                    <Route
+                        path="/admin/edit-database"
+                        element={<EditDatabase darkMode={darkMode} setDarkMode={setDarkMode} />}
                     />
-
-                    <CompatibilityCheck
-                        setSelectedCpu={setSelectedCpu}
-                        setSelectedMotherboard={setSelectedMotherboard}
-                        filteredCpus={filteredCpus}
-                        filteredMotherboards={filteredMotherboards}
-                        setIsFilterOpen={setIsFilterOpen}
-                    />
-
-                    <TableDetails
-                        selectedCpu={selectedCpu}
-                        selectedMotherboard={selectedMotherboard}
-                    />
-                </div>
-                <Footer/>
-            </div>
+                </Routes>
+            </BrowserRouter>
         </ThemeProvider>
     );
 }
