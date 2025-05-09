@@ -17,77 +17,77 @@ export const CPUTable = ({ cpuData }) => {
                 <TableHead>
                     <TableRow>
                         <TableCell>Specifications</TableCell>
-                        <TableCell align="center">CPU</TableCell>
+                        <TableCell className="table-container_table_cell">CPU</TableCell>
                     </TableRow>
                 </TableHead>
                 <TableBody>
                     <TableRow>
                         <TableCell>Manufacturer</TableCell>
-                        <TableCell align="center">{cpuData.manufacturer}</TableCell>
+                        <TableCell className="table-container_table_cell">{cpuData.manufacturer}</TableCell>
                     </TableRow>
                     <TableRow>
                         <TableCell>Name</TableCell>
-                        <TableCell align="center">{cpuData.name}</TableCell>
+                        <TableCell className="table-container_table_cell">{cpuData.name}</TableCell>
                     </TableRow>
                     <TableRow>
                         <TableCell>Socket</TableCell>
-                        <TableCell align="center">{cpuData.socket}</TableCell>
+                        <TableCell className="table-container_table_cell">{cpuData.socket}</TableCell>
                     </TableRow>
                     <TableRow>
                         <TableCell>Core Count</TableCell>
-                        <TableCell align="center">{cpuData.core_count}</TableCell>
+                        <TableCell className="table-container_table_cell">{cpuData.core_count}</TableCell>
                     </TableRow>
                     <TableRow>
                         <TableCell>Thread Count</TableCell>
-                        <TableCell align="center">{cpuData.thread_count}</TableCell>
+                        <TableCell className="table-container_table_cell">{cpuData.thread_count}</TableCell>
                     </TableRow>
                     <TableRow>
                         <TableCell>Base Frequency</TableCell>
-                        <TableCell align="center">{cpuData.base_frequency} GHz</TableCell>
+                        <TableCell className="table-container_table_cell">{cpuData.base_frequency} GHz</TableCell>
                     </TableRow>
                     <TableRow>
                         <TableCell>Max Frequency</TableCell>
-                        <TableCell align="center">{cpuData.max_frequency} GHz</TableCell>
+                        <TableCell className="table-container_table_cell">{cpuData.max_frequency} GHz</TableCell>
                     </TableRow>
                     <TableRow>
                         <TableCell>Cache L3</TableCell>
-                        <TableCell align="center">{cpuData.cache_l3} MB</TableCell>
+                        <TableCell className="table-container_table_cell">{cpuData.cache_l3} MB</TableCell>
                     </TableRow>
                     <TableRow>
                         <TableCell>Architecture</TableCell>
-                        <TableCell align="center">{cpuData.architecture}</TableCell>
+                        <TableCell className="table-container_table_cell">{cpuData.architecture}</TableCell>
                     </TableRow>
                     <TableRow>
                         <TableCell>Family</TableCell>
-                        <TableCell align="center">{cpuData.family}</TableCell>
+                        <TableCell className="table-container_table_cell">{cpuData.family}</TableCell>
                     </TableRow>
                     <TableRow>
                         <TableCell>Generation</TableCell>
-                        <TableCell align="center">{cpuData.generation}</TableCell>
+                        <TableCell className="table-container_table_cell">{cpuData.generation}</TableCell>
                     </TableRow>
                     <TableRow>
                         <TableCell>Has Integrated GPU</TableCell>
-                        <TableCell align="center">{cpuData.has_integrated_gpu ? 'Yes' : 'No'}</TableCell>
+                        <TableCell className="table-container_table_cell">{cpuData.has_integrated_gpu ? 'Yes' : 'No'}</TableCell>
                     </TableRow>
                     <TableRow>
                         <TableCell>Unlocked Multiplier</TableCell>
-                        <TableCell align="center">{cpuData.unlocked_multiplier ? 'Yes' : 'No'}</TableCell>
+                        <TableCell className="table-container_table_cell">{cpuData.unlocked_multiplier ? 'Yes' : 'No'}</TableCell>
                     </TableRow>
                     <TableRow>
                         <TableCell>Memory Type</TableCell>
-                        <TableCell align="center">{cpuData.memory_type}</TableCell>
+                        <TableCell className="table-container_table_cell">{cpuData.memory_type}</TableCell>
                     </TableRow>
                     <TableRow>
                         <TableCell>Memory Max GB</TableCell>
-                        <TableCell align="center">{cpuData.memory_max_gb} GB</TableCell>
+                        <TableCell className="table-container_table_cell">{cpuData.memory_max_gb} GB</TableCell>
                     </TableRow>
                     <TableRow>
                         <TableCell>Process (nm)</TableCell>
-                        <TableCell align="center">{cpuData.process_nm} nm</TableCell>
+                        <TableCell className="table-container_table_cell">{cpuData.process_nm} nm</TableCell>
                     </TableRow>
                     <TableRow>
                         <TableCell>TDP (Watts)</TableCell>
-                        <TableCell align="center">{cpuData.tdp_watts} W</TableCell>
+                        <TableCell className="table-container_table_cell">{cpuData.tdp_watts} W</TableCell>
                     </TableRow>
                 </TableBody>
             </Table>

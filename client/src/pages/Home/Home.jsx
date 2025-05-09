@@ -1,12 +1,14 @@
 import './Home.css';
 
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 
-import { Header } from "../Header/Header.jsx";
-import { FiltersSidebar } from "../FiltersSidebar/FiltersSidebar.jsx";
-import { CompatibilityCheck } from "../CompatibilityCheck/CompatibilityCheck.jsx";
-import { TableDetails } from "../TableDetails/TableDetails.jsx";
-import { Footer } from "../Footer/Footer.jsx";
+import { Header } from "../../components/Header/Header.jsx";
+import { EditButton } from "../../components/EditButton/EditButton.jsx";
+import { FiltersSidebar } from "../../components/FiltersSidebar/FiltersSidebar.jsx";
+import { CompatibilityCheck } from "../../components/CompatibilityCheck/CompatibilityCheck.jsx";
+import { TableDetails } from "../../components/TableDetails/TableDetails.jsx";
+import { Footer } from "../../components/Footer/Footer.jsx";
 
 export const Home = ({ darkMode, setDarkMode }) => {
     const [selectedCpu, setSelectedCpu] = useState(null);
@@ -14,6 +16,12 @@ export const Home = ({ darkMode, setDarkMode }) => {
     const [isFilterOpen, setIsFilterOpen] = useState(false);
     const [filteredCpus, setFilteredCpus] = useState([]);
     const [filteredMotherboards, setFilteredMotherboards] = useState([]);
+
+    const navigate = useNavigate();
+
+    const handleEditClick = () => {
+        navigate("/edit-database");
+    }
 
     const toggleDarkMode = () => {
         setDarkMode(prev => !prev);
@@ -28,12 +36,17 @@ export const Home = ({ darkMode, setDarkMode }) => {
     };
 
     return (
-        <div className="home-container">
-            <div className="home-container__content">
+        <div className="home__container">
+            <div className="home__content">
                 <Header
                     darkMode={darkMode}
                     toggleDarkMode={toggleDarkMode}
                 />
+
+                <EditButton
+                    isEditOpen={handleEditClick}
+                />
+
                 <FiltersSidebar
                     open={isFilterOpen}
                     onClose={() => setIsFilterOpen(false)}

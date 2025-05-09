@@ -7,6 +7,97 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
+app.get('/api/tables', async (req, res) => {
+    try {
+        const result = await pool.query(`
+            SELECT table_name
+            FROM information_schema.tables
+            WHERE table_schema = 'public'
+            AND table_name IN (
+                'cpus', 'motherboards', 'compatibility', 'chipsets', 'form_factors',
+                'manufacturers', 'memory_types', 'sockets', 'cpu_generations',
+                'cpu_architectures', 'cpu_families'
+            )
+            ORDER BY table_name
+        `);
+        const tables = result.rows.map((row, index) => ({
+            id: index + 1,
+            name: row.table_name,
+        }));
+        res.json(tables);
+    } catch (err) {
+        console.error('Error fetching tables:', err.stack);
+        res.status(500).json({ error: 'Database error', details: err.message });
+    }
+});
+
+app.get('/api/table/:tableName', async (req, res) => {
+    const { tableName } = req.params;
+    try {
+        const result = await pool.query(`SELECT * FROM ${tableName}`);
+        res.json(result.rows);
+    } catch (err) {
+        console.error(`Error fetching data from ${tableName}:`, err.stack);
+        res.status(500).json({ error: 'Database error', details: err.message });
+    }
+});
+
+app.post('/api/table/:tableName', async (req, res) => {
+    const { tableName } = req.params;
+    const data = req.body;
+    try {
+        const columns = Object.keys(data).join(', ');
+        const values = Object.values(data);
+        const placeholders = values.map((_, i) => `$${i + 1}`).join(', ');
+        const result = await pool.query(
+            `INSERT INTO ${tableName} (${columns}) VALUES (${placeholders}) RETURNING *`,
+            values
+        );
+        res.status(201).json(result.rows[0]);
+    } catch (err) {
+        console.error(`Error adding row to ${tableName}:`, err.stack);
+        res.status(500).json({ error: 'Database error', details: err.message });
+    }
+});
+
+app.put('/api/table/:tableName/:id', async (req, res) => {
+    const { tableName, id } = req.params;
+    const data = req.body;
+    try {
+        const updates = Object.keys(data).map((key, i) => `${key} = $${i + 1}`).join(', ');
+        const values = Object.values(data);
+        values.push(id);
+        const result = await pool.query(
+            `UPDATE ${tableName} SET ${updates} WHERE id = $${values.length} RETURNING *`,
+            values
+        );
+        if (result.rows.length === 0) {
+            return res.status(404).json({ error: 'Row not found' });
+        }
+        res.json(result.rows[0]);
+    } catch (err) {
+        console.error(`Error updating row in ${tableName}:`, err.stack);
+        res.status(500).json({ error: 'Database error', details: err.message });
+    }
+});
+
+app.delete('/api/table/:tableName/:id', async (req, res) => {
+    const { tableName, id } = req.params;
+    try {
+        const result = await pool.query(
+            `DELETE FROM ${tableName} WHERE id = $1 RETURNING *`,
+            [id]
+        );
+        if (result.rows.length === 0) {
+            return res.status(404).json({ error: 'Row not found' });
+        }
+        res.json({ message: 'Row deleted successfully' });
+    } catch (err) {
+        console.error(`Error deleting row from ${tableName}:`, err.stack);
+        res.status(500).json({ error: 'Database error', details: err.message });
+    }
+});
+
 app.get('/api/cpus', async (req, res) => {
     try {
         const result = await pool.query('SELECT id, name FROM cpus');

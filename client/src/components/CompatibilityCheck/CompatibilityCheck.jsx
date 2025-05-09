@@ -3,6 +3,7 @@ import React, { useEffect, useState } from "react";
 import { FaCheckCircle, FaTimesCircle } from 'react-icons/fa';
 import { Select } from "../Select/Select.jsx";
 import {FiltersButton} from "../FiltersSidebar/components/FiltersButton/FiltersButton.jsx";
+import {EditButton} from "../EditButton/EditButton.jsx";
 
 export const CompatibilityCheck = ({ setSelectedCpu, setSelectedMotherboard, filteredCpus, filteredMotherboards, setIsFilterOpen }) => {
     const [cpuOptions, setCpuOptions] = useState([]);

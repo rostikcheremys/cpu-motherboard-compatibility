@@ -1,0 +1,50 @@
+.edit-table-button__button {
+    font-family: var(--third-family) !important;
+    font-size: 16px !important;
+    font-weight: 600 !important;
+    color: white !important;
+    text-transform: capitalize !important;
+}
+
+.edit-table-button__content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.edit-table-button__icon {
+    font-size: 18px !important;
+    margin-right: 5px;
+}
+
+.add {
+    background: #0B438C !important;
+}
+
+.add:hover {
+    background: #1054ab !important;
+}
+
+.edit {
+    background: #f36106 !important;
+}
+
+.edit:hover {
+    background: #ff8e00 !important;
+}
+
+.save {
+    background: #20a904 !important;
+}
+
+.save:hover {
+    background: #2ccb03 !important;
+}
+
+.delete {
+    background: #ce0101 !important;
+}
+
+.delete:hover {
+    background: #ff0000 !important;
+}

@@ -3,9 +3,9 @@ import { Routes, Route, BrowserRouter } from "react-router-dom";
 
 import { ThemeProvider, createTheme, CssBaseline } from "@mui/material";
 
-import { Home } from "./components/Home/Home.jsx";
+import { Home } from "./pages/Home/Home.jsx";
 
-import { EditDatabase } from './components/Admin/EditDatabase.jsx';
+import { EditDatabase } from './pages/EditDatabase/EditDatabase.jsx';
 
 export default function App() {
     const [darkMode, setDarkMode] = useState(false);
@@ -27,7 +27,7 @@ export default function App() {
                         element={<Home darkMode={darkMode} setDarkMode={setDarkMode} />}
                     />
                     <Route
-                        path="/admin/edit-database"
+                        path="/edit-database"
                         element={<EditDatabase darkMode={darkMode} setDarkMode={setDarkMode} />}
                     />
                 </Routes>

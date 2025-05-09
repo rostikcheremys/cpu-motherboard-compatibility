@@ -14,3 +14,26 @@ html, body {
     display: flex;
     flex-direction: column;
 }
+
+.MuiTableHead-root {
+    background-color: #0B438C; !important;
+    color: white;
+}
+
+.MuiTableCell-head {
+    font-family: var(--font-family) !important;
+    font-weight: 600 !important;
+    font-size: 16px !important;
+    color: white !important;
+    padding-left: 30px !important;
+}
+
+.MuiTableCell-body {
+    font-family: var(--font-family) !important;
+    font-size: 16px !important;
+    padding-left: 30px !important;
+}
+
+.MuiCircularProgress-root {
+    color: #0B438C !important;
+}
