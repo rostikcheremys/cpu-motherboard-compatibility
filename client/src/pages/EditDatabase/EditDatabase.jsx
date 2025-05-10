@@ -1,6 +1,6 @@
 import './EditDatabase.css';
 
-import { useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from "react-router-dom";
 
 import TextField from '@mui/material/TextField';
@@ -276,21 +276,26 @@ export const EditDatabase = ({ darkMode, setDarkMode }) => {
                 </div>
 
                 <div className="edit-database__text-fields-container">
+
                     {selectedTable && columns.length > 0 && (
                         <div className="edit-database__text-fields-wrapper">
+                            <h3 className="edit-database__text-fields-label">Add new record:</h3>
                             <div className="edit-database__text-fields">
                                 {columns
                                     .filter(column => column !== 'id')
                                     .map((column) => (
-                                    <TextField
-                                        className="edit-database__text-field-add"
-                                        variant="outlined"
-                                        key={column}
-                                        label={column}
-                                        value={newRowForAdd[column] || ''}
-                                        onChange={(e) => setNewRowForAdd({ ...newRowForAdd, [column]: e.target.value })}
-                                    />
-                                ))}
+                                        <TextField
+                                            className="edit-database__text-field-add"
+                                            variant="outlined"
+                                            key={column}
+                                            label={column}
+                                            value={newRowForAdd[column] || ''}
+                                            onChange={(e) => setNewRowForAdd({
+                                                ...newRowForAdd,
+                                                [column]: e.target.value
+                                            })}
+                                        />
+                                    ))}
                             </div>
 
                             <EditTableButton
