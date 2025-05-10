@@ -1,0 +1,28 @@
+.dialog__title {
+    text-align: center;
+    font-family: var(--font-family) !important;
+    font-weight: 600 !important;
+    font-size: 20px !important;
+    line-height: 140%; !important;
+    color: #242731; !important;
+}
+
+.dialog__description {
+    font-family: var(--font-family) !important;
+    font-weight: 300 !important;
+    font-size: 14px !important;
+    line-height: 133% !important;
+    color: #575f6e !important;
+}
+
+.dialog__button {
+    font-family: var(--font-family) !important;
+    font-weight: 600 !important;
+    font-size: 16px !important;
+    line-height: 140%; !important;
+    color: #242731; !important;
+}
+
+.error {
+    color: red !important;
+}

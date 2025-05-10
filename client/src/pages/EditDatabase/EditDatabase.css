@@ -31,7 +31,7 @@
     display: flex;
     justify-content: center;
     width: 100%;
-    padding: 0 37px;
+    padding: 0 40px;
 }
 
 .edit-database__text-fields-wrapper {
@@ -60,7 +60,7 @@
     justify-content: center;
     align-items: center;
     width: 100%;
-    padding: 0 37px;
+    padding: 0 40px;
     box-sizing: border-box;
     margin: 50px 0 40px;
 }

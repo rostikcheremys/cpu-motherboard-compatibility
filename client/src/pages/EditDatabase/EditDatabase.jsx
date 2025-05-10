@@ -1,6 +1,7 @@
 import './EditDatabase.css';
 
 import { useState, useEffect } from 'react';
+import { useNavigate } from "react-router-dom";
 
 import TextField from '@mui/material/TextField';
 import Paper from '@mui/material/Paper';
@@ -14,7 +15,11 @@ import { CircularProgress } from "@mui/material";
 import { Header } from "../../components/Header/Header.jsx";
 import { Select } from "../../components/Select/Select.jsx";
 import { Footer } from "../../components/Footer/Footer.jsx";
+import { EditDialog } from "../../components/Dialog/EditDialog.jsx";
+import { ErrorDialog } from "../../components/Dialog/ErrorDialog.jsx";
+import { BackButton } from "../../components/BackButton/BackButton.jsx";
 import { EditTableButton } from "../../components/EditTableButton/EditTableButton.jsx";
+
 
 export const EditDatabase = ({ darkMode, setDarkMode }) => {
     const [tables, setTables] = useState([]);
@@ -24,7 +29,20 @@ export const EditDatabase = ({ darkMode, setDarkMode }) => {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
     const [editRow, setEditRow] = useState(null);
-    const [newRow, setNewRow] = useState({});
+    const [newRowForEdit, setNewRowForEdit] = useState({});
+    const [newRowForAdd, setNewRowForAdd] = useState({});
+    const [errorDialogOpen, setErrorDialogOpen] = useState(false);
+
+    const [dialogOpen, setDialogOpen] = useState(false);
+    const [dialogAction, setDialogAction] = useState(null);
+    const [dialogConfig, setDialogConfig] = useState({
+        title: '',
+        description: '',
+        confirmText: '',
+        cancelText: '',
+    });
+
+    const navigate = useNavigate();
 
     const toggleDarkMode = () => {
         setDarkMode(prev => !prev);
@@ -34,6 +52,12 @@ export const EditDatabase = ({ darkMode, setDarkMode }) => {
         fetchTables();
     }, []);
 
+    useEffect(() => {
+        if (error) {
+            setErrorDialogOpen(true);
+        }
+    }, [error]);
+
     const fetchTables = async () => {
         try {
             const response = await fetch('http://localhost:3001/api/tables');
@@ -41,10 +65,10 @@ export const EditDatabase = ({ darkMode, setDarkMode }) => {
                 const data = await response.json();
                 setTables(data);
             } else {
-                setError('Failed to load tables');
+                setError('Failed to load tables!');
             }
         } catch (err) {
-            setError('Error fetching tables');
+            setError('Error fetching tables!');
             console.error(err);
         } finally {
             setLoading(false);
@@ -65,10 +89,10 @@ export const EditDatabase = ({ darkMode, setDarkMode }) => {
                     setTableData([]);
                 }
             } else {
-                setError('Failed to load table data');
+                setError('Failed to load table data!');
             }
         } catch (err) {
-            setError('Error fetching table data');
+            setError('Error fetching table data!');
             console.error(err);
         }
     };
@@ -76,7 +100,8 @@ export const EditDatabase = ({ darkMode, setDarkMode }) => {
     const handleTableChange = (event, newValue) => {
         setSelectedTable(newValue);
         setEditRow(null);
-        setNewRow({});
+        setNewRowForEdit({});
+        setNewRowForAdd({});
         if (newValue) {
             fetchTableData(newValue.name);
         } else {
@@ -87,81 +112,139 @@ export const EditDatabase = ({ darkMode, setDarkMode }) => {
 
     const handleEdit = (row) => {
         setEditRow(row);
-        setNewRow({...row});
+        setNewRowForEdit({ ...row });
+    };
+
+    const openDialog = (action, config) => {
+        setDialogAction(() => action);
+        setDialogConfig(config);
+        setDialogOpen(true);
+    };
+
+    const handleCancelDialog = () => {
+        setDialogOpen(false);
+        setDialogAction(null);
+    };
+
+    const handleConfirmDialog = () => {
+        if (dialogAction) {
+            dialogAction();
+        }
+        setDialogOpen(false);
+        setDialogAction(null);
+    };
+
+    const handleConfirmErrorDialog = () => {
+        setErrorDialogOpen(false);
+        setError(null);
+    };
+
+    const handleCancelErrorDialog = () => {
+        setErrorDialogOpen(false);
+        setError(null);
     };
 
     const handleSave = async (id) => {
-        try {
-            const response = await fetch(`http://localhost:3001/api/table/${selectedTable.name}/${id}`, {
-                method: 'PUT',
-                headers: {'Content-Type': 'application/json'},
-                body: JSON.stringify(newRow),
-            });
-            if (response.ok) {
-                fetchTableData(selectedTable.name);
-                setEditRow(null);
-                alert('Changes saved successfully!');
-            } else {
-                setError('Failed to save changes');
+        openDialog(
+            async () => {
+                try {
+                    const response = await fetch(`http://localhost:3001/api/table/${selectedTable.name}/${id}`, {
+                        method: 'PUT',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify(newRowForEdit),
+                    });
+                    if (response.ok) {
+                        fetchTableData(selectedTable.name);
+                        setEditRow(null);
+                    } else {
+                        setError('Failed to save changes!');
+                    }
+                } catch (err) {
+                    setError('Error saving changes!');
+                    console.error(err);
+                }
+            },
+            {
+                title: 'Confirm Save',
+                description: 'Are you sure you want to save changes?',
+                confirmText: 'Save',
+                cancelText: 'Cancel',
             }
-        } catch (err) {
-            setError('Error saving changes');
-            console.error(err);
-        }
+        );
     };
 
     const handleAdd = async () => {
-        try {
-            const response = await fetch(`http://localhost:3001/api/table/${selectedTable.name}`, {
-                method: 'POST',
-                headers: {'Content-Type': 'application/json'},
-                body: JSON.stringify(newRow),
-            });
-            if (response.ok) {
-                fetchTableData(selectedTable.name);
-                setNewRow({});
-                alert('New row added successfully!');
-            } else {
-                setError('Failed to add new row');
+        openDialog(
+            async () => {
+                try {
+                    const response = await fetch(`http://localhost:3001/api/table/${selectedTable.name}`, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify(newRowForAdd),
+                    });
+                    if (response.ok) {
+                        fetchTableData(selectedTable.name);
+                        setNewRowForAdd({});
+                    } else {
+                        setError('Failed to add new row!');
+                    }
+                } catch (err) {
+                    setError('Error adding new row!');
+                    console.error(err);
+                }
+            },
+            {
+                title: 'Confirm Add',
+                description: 'Are you sure you want to add a new row?',
+                confirmText: 'Add',
+                cancelText: 'Cancel',
             }
-        } catch (err) {
-            setError('Error adding new row');
-            console.error(err);
-        }
+        );
     };
 
     const handleDelete = async (id) => {
-        try {
-            const response = await fetch(`http://localhost:3001/api/table/${selectedTable.name}/${id}`, {
-                method: 'DELETE',
-            });
-            if (response.ok) {
-                fetchTableData(selectedTable.name);
-                alert('Row deleted successfully!');
-            } else {
-                setError('Failed to delete row');
+        openDialog(
+            async () => {
+                try {
+                    const response = await fetch(`http://localhost:3001/api/table/${selectedTable.name}/${id}`, {
+                        method: 'DELETE',
+                    });
+                    if (response.ok) {
+                        fetchTableData(selectedTable.name);
+                    } else {
+                        setError('Failed to delete row!');
+                    }
+                } catch (err) {
+                    setError('Error deleting row!');
+                    console.error(err);
+                }
+            },
+            {
+                title: 'Confirm Delete',
+                description: 'Are you sure you want to delete this row?',
+                confirmText: 'Delete',
+                cancelText: 'Cancel',
             }
-        } catch (err) {
-            setError('Error deleting row');
-            console.error(err);
-        }
+        );
+    };
+
+    const handleBack = () => {
+        openDialog(
+            () => navigate("/"),
+            {
+                title: 'Confirm Exit',
+                description: 'Are you sure you want to go back? Unsaved changes will be lost.',
+                confirmText: 'Yes',
+                cancelText: 'No',
+            }
+        );
     };
 
     if (loading) return (
         <div className="edit-database__loading">
-            <CircularProgress/>
+            <CircularProgress />
         </div>
     );
-
-    if (error) {
-        return (
-            <div className="edit-database__error">
-                <div className="edit-database__hint">
-                    {error}
-                </div>
-            </div>
-        );
-    }
 
     return (
         <div className="edit-database__container">
@@ -170,6 +253,8 @@ export const EditDatabase = ({ darkMode, setDarkMode }) => {
                     darkMode={darkMode}
                     toggleDarkMode={toggleDarkMode}
                 />
+
+                <BackButton onBack={handleBack} />
 
                 <div className="edit-database__tables-select">
                     <h5 className="edit-database__hint">Select table:</h5>
@@ -189,8 +274,8 @@ export const EditDatabase = ({ darkMode, setDarkMode }) => {
                                         variant="outlined"
                                         key={column}
                                         label={column}
-                                        value={newRow[column] || ''}
-                                        onChange={(e) => setNewRow({...newRow, [column]: e.target.value})}
+                                        value={newRowForAdd[column] || ''}
+                                        onChange={(e) => setNewRowForAdd({ ...newRowForAdd, [column]: e.target.value })}
                                     />
                                 ))}
                             </div>
@@ -216,7 +301,7 @@ export const EditDatabase = ({ darkMode, setDarkMode }) => {
                                             </TableCell>
                                         ))}
                                         <TableCell className="edit-database__table-cell">
-                                            actions
+                                            Actions
                                         </TableCell>
                                     </TableRow>
                                 </TableHead>
@@ -230,11 +315,8 @@ export const EditDatabase = ({ darkMode, setDarkMode }) => {
                                                             <TextField
                                                                 className="edit-database__text-field"
                                                                 variant="outlined"
-                                                                value={newRow[column] != null ? newRow[column].toString() : ''}
-                                                                onChange={(e) => setNewRow({
-                                                                    ...newRow,
-                                                                    [column]: e.target.value
-                                                                })}
+                                                                value={newRowForEdit[column] != null ? newRowForEdit[column].toString() : ''}
+                                                                onChange={(e) => setNewRowForEdit({ ...newRowForEdit, [column]: e.target.value })}
                                                             />
                                                         </div>
                                                     ) : (
@@ -274,11 +356,29 @@ export const EditDatabase = ({ darkMode, setDarkMode }) => {
                 )}
                 {selectedTable && tableData.length === 0 && (
                     <div className="edit-database__hint">
-                        No data available for this table!а
+                        No data available for this table!
                     </div>
                 )}
             </div>
-            <Footer/>
+
+            <EditDialog
+                open={dialogOpen}
+                onCancel={handleCancelDialog}
+                onConfirm={handleConfirmDialog}
+                title={dialogConfig.title}
+                description={dialogConfig.description}
+                confirmText={dialogConfig.confirmText}
+                cancelText={dialogConfig.cancelText}
+            />
+
+            <ErrorDialog
+                open={errorDialogOpen}
+                onCancel={handleCancelErrorDialog}
+                onConfirm={handleConfirmErrorDialog}
+                description={error || 'An error occurred.'}
+            />
+
+            <Footer />
         </div>
     );
 };
