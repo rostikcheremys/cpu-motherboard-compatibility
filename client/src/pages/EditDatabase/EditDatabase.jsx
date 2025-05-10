@@ -87,14 +87,14 @@ export const EditDatabase = ({ darkMode, setDarkMode }) => {
 
     const handleEdit = (row) => {
         setEditRow(row);
-        setNewRow({ ...row });
+        setNewRow({...row});
     };
 
     const handleSave = async (id) => {
         try {
             const response = await fetch(`http://localhost:3001/api/table/${selectedTable.name}/${id}`, {
                 method: 'PUT',
-                headers: { 'Content-Type': 'application/json' },
+                headers: {'Content-Type': 'application/json'},
                 body: JSON.stringify(newRow),
             });
             if (response.ok) {
@@ -114,7 +114,7 @@ export const EditDatabase = ({ darkMode, setDarkMode }) => {
         try {
             const response = await fetch(`http://localhost:3001/api/table/${selectedTable.name}`, {
                 method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
+                headers: {'Content-Type': 'application/json'},
                 body: JSON.stringify(newRow),
             });
             if (response.ok) {
@@ -149,11 +149,19 @@ export const EditDatabase = ({ darkMode, setDarkMode }) => {
 
     if (loading) return (
         <div className="edit-database__loading">
-            <CircularProgress />
+            <CircularProgress/>
         </div>
     );
 
-    if (error) return <div>{error}</div>;
+    if (error) {
+        return (
+            <div className="edit-database__error">
+                <div className="edit-database__hint">
+                    {error}
+                </div>
+            </div>
+        );
+    }
 
     return (
         <div className="edit-database__container">
@@ -204,7 +212,7 @@ export const EditDatabase = ({ darkMode, setDarkMode }) => {
                                     <TableRow>
                                         {columns.map((column) => (
                                             <TableCell className="edit-database__table-cell">
-                                            {column}
+                                                {column}
                                             </TableCell>
                                         ))}
                                         <TableCell className="edit-database__table-cell">
@@ -223,7 +231,10 @@ export const EditDatabase = ({ darkMode, setDarkMode }) => {
                                                                 className="edit-database__text-field"
                                                                 variant="outlined"
                                                                 value={newRow[column] != null ? newRow[column].toString() : ''}
-                                                                onChange={(e) => setNewRow({ ...newRow, [column]: e.target.value })}
+                                                                onChange={(e) => setNewRow({
+                                                                    ...newRow,
+                                                                    [column]: e.target.value
+                                                                })}
                                                             />
                                                         </div>
                                                     ) : (
@@ -262,10 +273,12 @@ export const EditDatabase = ({ darkMode, setDarkMode }) => {
                     </div>
                 )}
                 {selectedTable && tableData.length === 0 && (
-                    <div className="edit-database__hint">No data available for this table!а</div>
+                    <div className="edit-database__hint">
+                        No data available for this table!а
+                    </div>
                 )}
             </div>
-            <Footer />
+            <Footer/>
         </div>
     );
 };

@@ -93,6 +93,9 @@
     height: 100vh;
 }
 
-
-
-
+.edit-database__error {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+}
