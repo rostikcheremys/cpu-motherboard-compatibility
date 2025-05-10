@@ -20,7 +20,6 @@ import { ErrorDialog } from "../../components/Dialog/ErrorDialog.jsx";
 import { BackButton } from "../../components/BackButton/BackButton.jsx";
 import { EditTableButton } from "../../components/EditTableButton/EditTableButton.jsx";
 
-
 export const EditDatabase = ({ darkMode, setDarkMode }) => {
     const [tables, setTables] = useState([]);
     const [selectedTable, setSelectedTable] = useState(null);
@@ -174,13 +173,25 @@ export const EditDatabase = ({ darkMode, setDarkMode }) => {
     };
 
     const handleAdd = async () => {
+        const existingIds = new Set(tableData.map(row => parseInt(row.id)));
+        let newId = tableData.length > 0 ? Math.max(...existingIds) + 1 : 1;
+
+        while (existingIds.has(newId)) {
+            newId += 1;
+        }
+
+        const updatedNewRowForAdd = {
+            ...newRowForAdd,
+            id: newId.toString(),
+        };
+
         openDialog(
             async () => {
                 try {
                     const response = await fetch(`http://localhost:3001/api/table/${selectedTable.name}`, {
                         method: 'POST',
                         headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify(newRowForAdd),
+                        body: JSON.stringify(updatedNewRowForAdd),
                     });
                     if (response.ok) {
                         fetchTableData(selectedTable.name);
@@ -268,7 +279,9 @@ export const EditDatabase = ({ darkMode, setDarkMode }) => {
                     {selectedTable && columns.length > 0 && (
                         <div className="edit-database__text-fields-wrapper">
                             <div className="edit-database__text-fields">
-                                {columns.map((column) => (
+                                {columns
+                                    .filter(column => column !== 'id')
+                                    .map((column) => (
                                     <TextField
                                         className="edit-database__text-field-add"
                                         variant="outlined"
@@ -308,17 +321,22 @@ export const EditDatabase = ({ darkMode, setDarkMode }) => {
                                 <TableBody>
                                     {tableData.map((row) => (
                                         <TableRow key={row.id || row.name}>
-                                            {columns.map((column) => (
+                                            {columns
+                                                .map((column) => (
                                                 <TableCell key={column} className="edit-database__table-cell">
                                                     {editRow === row ? (
-                                                        <div>
-                                                            <TextField
-                                                                className="edit-database__text-field"
-                                                                variant="outlined"
-                                                                value={newRowForEdit[column] != null ? newRowForEdit[column].toString() : ''}
-                                                                onChange={(e) => setNewRowForEdit({ ...newRowForEdit, [column]: e.target.value })}
-                                                            />
-                                                        </div>
+                                                        column !== 'id' ? (
+                                                            <div>
+                                                                <TextField
+                                                                    className="edit-database__text-field"
+                                                                    variant="outlined"
+                                                                    value={newRowForEdit[column] != null ? newRowForEdit[column].toString() : ''}
+                                                                    onChange={(e) => setNewRowForEdit({ ...newRowForEdit, [column]: e.target.value })}
+                                                                />
+                                                            </div>
+                                                        ) : (
+                                                            row[column] != null ? row[column].toString() : 'N/A'
+                                                        )
                                                     ) : (
                                                         row[column] != null ? row[column].toString() : 'N/A'
                                                     )}

@@ -2,7 +2,7 @@ import './Dialog.css';
 
 import { Dialog, DialogTitle, DialogContent, DialogContentText, DialogActions, Button } from '@mui/material';
 
-export const EditDialog = ({open, onCancel, onConfirm, title, description, confirmText, cancelText, error }) => {
+export const EditDialog = ({open, onCancel, onConfirm, title, description, confirmText, cancelText }) => {
     return (
         <Dialog open={open} onClose={onCancel}>
             <DialogTitle className="dialog__title">{title}</DialogTitle>
