@@ -28,3 +28,9 @@
     font-size: 18px !important;
     margin-right: 5px;
 }
+
+@media (max-width: 480px) {
+    .back-button {
+        width: 480px;
+    }
+}

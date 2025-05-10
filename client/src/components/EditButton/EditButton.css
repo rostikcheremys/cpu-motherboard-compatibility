@@ -28,3 +28,17 @@
     font-size: 18px !important;
     margin-right: 5px;
 }
+
+@media (max-width: 1280px) {
+    .edit-button {
+        width: 900px;
+        padding: 20px 0;
+    }
+}
+
+@media (max-width: 980px) {
+    .edit-button {
+        width: 400px;
+        padding: 20px 0;
+    }
+}

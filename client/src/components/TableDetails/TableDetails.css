@@ -16,3 +16,27 @@
     display: inline-block;
 }
 
+@media (max-width: 930px) {
+    .table-details {
+        width: 100%;
+        padding: 0 40px;
+    }
+
+    .table-details__tables {
+        margin: 20px 0 40px 0;
+    }
+
+    .table-details__label {
+        text-align: center;
+    }
+}
+
+@media (max-width: 480px) {
+    .table-details {
+        width: 480px;
+    }
+}
+
+
+
+

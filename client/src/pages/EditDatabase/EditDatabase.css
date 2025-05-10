@@ -99,3 +99,16 @@
     align-items: center;
     height: 100vh;
 }
+
+@media (max-width: 930px) {
+    .edit-database__table-container {
+        width: 100%;
+        padding: 0 40px;
+    }
+}
+
+@media (max-width: 480px) {
+    .edit-database__table-container {
+        width: 480px;
+    }
+}
