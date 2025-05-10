@@ -30,6 +30,8 @@ export const EditDatabase = ({ darkMode, setDarkMode }) => {
     const [editRow, setEditRow] = useState(null);
     const [newRowForEdit, setNewRowForEdit] = useState({});
     const [newRowForAdd, setNewRowForAdd] = useState({});
+    const [addErrors, setAddErrors] = useState({});
+    const [editErrors, setEditErrors] = useState({});
     const [errorDialogOpen, setErrorDialogOpen] = useState(false);
 
     const [dialogOpen, setDialogOpen] = useState(false);
@@ -101,6 +103,9 @@ export const EditDatabase = ({ darkMode, setDarkMode }) => {
         setEditRow(null);
         setNewRowForEdit({});
         setNewRowForAdd({});
+        setAddErrors({});
+        setEditErrors({});
+
         if (newValue) {
             fetchTableData(newValue.name);
         } else {
@@ -112,6 +117,7 @@ export const EditDatabase = ({ darkMode, setDarkMode }) => {
     const handleEdit = (row) => {
         setEditRow(row);
         setNewRowForEdit({ ...row });
+        setEditErrors({});
     };
 
     const openDialog = (action, config) => {
@@ -143,7 +149,25 @@ export const EditDatabase = ({ darkMode, setDarkMode }) => {
         setError(null);
     };
 
+    const validateEditForm = () => {
+        const newEditErrors = {};
+        const requiredFields = columns.filter(column => column !== 'id');
+
+        requiredFields.forEach(column => {
+            if (!newRowForEdit[column] || newRowForEdit[column].toString().trim() === '') {
+                newEditErrors[column] = 'This field is required';
+            }
+        });
+
+        setEditErrors(newEditErrors);
+        return Object.keys(newEditErrors).length === 0;
+    };
+
     const handleSave = async (id) => {
+        if (!validateEditForm()) {
+            return;
+        }
+
         openDialog(
             async () => {
                 try {
@@ -155,6 +179,7 @@ export const EditDatabase = ({ darkMode, setDarkMode }) => {
                     if (response.ok) {
                         fetchTableData(selectedTable.name);
                         setEditRow(null);
+                        setEditErrors({});
                     } else {
                         setError('Failed to save changes!');
                     }
@@ -172,7 +197,25 @@ export const EditDatabase = ({ darkMode, setDarkMode }) => {
         );
     };
 
+    const validateAddForm = () => {
+        const newErrors = {};
+        const requiredFields = columns.filter(column => column !== 'id');
+
+        requiredFields.forEach(column => {
+            if (!newRowForAdd[column] || newRowForAdd[column].trim() === '') {
+                newErrors[column] = 'This field is required!';
+            }
+        });
+
+        setAddErrors(newErrors);
+        return Object.keys(newErrors).length === 0;
+    };
+
     const handleAdd = async () => {
+        if (!validateAddForm()) {
+            return;
+        }
+
         const existingIds = new Set(tableData.map(row => parseInt(row.id)));
         let newId = tableData.length > 0 ? Math.max(...existingIds) + 1 : 1;
 
@@ -196,6 +239,7 @@ export const EditDatabase = ({ darkMode, setDarkMode }) => {
                     if (response.ok) {
                         fetchTableData(selectedTable.name);
                         setNewRowForAdd({});
+                        setAddErrors({});
                     } else {
                         setError('Failed to add new row!');
                     }
@@ -276,7 +320,6 @@ export const EditDatabase = ({ darkMode, setDarkMode }) => {
                 </div>
 
                 <div className="edit-database__text-fields-container">
-
                     {selectedTable && columns.length > 0 && (
                         <div className="edit-database__text-fields-wrapper">
                             <h3 className="edit-database__text-fields-label">Add new record:</h3>
@@ -290,10 +333,16 @@ export const EditDatabase = ({ darkMode, setDarkMode }) => {
                                             key={column}
                                             label={column}
                                             value={newRowForAdd[column] || ''}
-                                            onChange={(e) => setNewRowForAdd({
-                                                ...newRowForAdd,
-                                                [column]: e.target.value
-                                            })}
+                                            onChange={(e) => {
+                                                setNewRowForAdd({...newRowForAdd, [column]: e.target.value});
+                                                setAddErrors(prev => {
+                                                    const newErrors = { ...prev };
+                                                    delete newErrors[column];
+                                                    return newErrors;
+                                                });
+                                            }}
+                                            error={!!addErrors[column]}
+                                            helperText={addErrors[column]}
                                         />
                                     ))}
                             </div>
@@ -326,8 +375,7 @@ export const EditDatabase = ({ darkMode, setDarkMode }) => {
                                 <TableBody>
                                     {tableData.map((row) => (
                                         <TableRow key={row.id || row.name}>
-                                            {columns
-                                                .map((column) => (
+                                            {columns.map((column) => (
                                                 <TableCell key={column} className="edit-database__table-cell">
                                                     {editRow === row ? (
                                                         column !== 'id' ? (
@@ -336,7 +384,16 @@ export const EditDatabase = ({ darkMode, setDarkMode }) => {
                                                                     className="edit-database__text-field"
                                                                     variant="outlined"
                                                                     value={newRowForEdit[column] != null ? newRowForEdit[column].toString() : ''}
-                                                                    onChange={(e) => setNewRowForEdit({ ...newRowForEdit, [column]: e.target.value })}
+                                                                    onChange={(e) => {
+                                                                        setNewRowForEdit({...newRowForEdit, [column]: e.target.value });
+                                                                        setEditErrors(prev => {
+                                                                            const newEditErrors = { ...prev };
+                                                                            delete newEditErrors[column];
+                                                                            return newEditErrors;
+                                                                        });
+                                                                    }}
+                                                                    error={!!editErrors[column]}
+                                                                    helperText={editErrors[column]}
                                                                 />
                                                             </div>
                                                         ) : (
