@@ -1,4 +1,4 @@
-import "./EditTableButton.css"
+import "./EditButtonDB.css"
 
 import { Button } from "@mui/material";
 
@@ -7,7 +7,7 @@ import EditIcon from '@mui/icons-material/Edit';
 import SaveIcon from '@mui/icons-material/Save';
 import DeleteIcon from '@mui/icons-material/Delete';
 
-export const EditTableButton = ({ name, style, editClick }) => {
+export const EditButtonDB = ({ name, style, editClick }) => {
     const icons = {
         add: AddIcon,
         edit: EditIcon,
@@ -18,14 +18,14 @@ export const EditTableButton = ({ name, style, editClick }) => {
     const IconComponent = icons[style];
 
     return(
-        <div className="edit-table-button">
+        <div className="edit-button-db">
             <Button
-                className={`edit-table-button__button ${style}`}
+                className={`edit-button-db__button ${style}`}
                 variant="contained"
                 onClick={editClick}
             >
-                <div className="edit-table-button__content">
-                    {IconComponent && <IconComponent className="edit-table-button__icon" />}
+                <div className="edit-button-db__content">
+                    {IconComponent && <IconComponent className="edit-button-db__icon" />}
                 </div>
                 {name}
             </Button>

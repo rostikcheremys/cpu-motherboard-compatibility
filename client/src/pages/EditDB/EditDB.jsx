@@ -1,4 +1,4 @@
-import './EditDatabase.css';
+import './EditDB.css';
 
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from "react-router-dom";
@@ -18,9 +18,9 @@ import { Footer } from "../../components/Footer/Footer.jsx";
 import { EditDialog } from "../../components/Dialog/EditDialog.jsx";
 import { ErrorDialog } from "../../components/Dialog/ErrorDialog.jsx";
 import { BackButton } from "../../components/Buttons/BackButton/BackButton.jsx";
-import { EditTableButton } from "../../components/Buttons/EditTableButton/EditTableButton.jsx";
+import { EditButtonDB } from "../../components/Buttons/EditButtonDB/EditButtonDB.jsx";
 
-export const EditDatabase = ({ darkMode, setDarkMode }) => {
+export const EditDB = ({ darkMode, setDarkMode }) => {
     const [tables, setTables] = useState([]);
     const [selectedTable, setSelectedTable] = useState(null);
     const [tableData, setTableData] = useState([]);
@@ -347,7 +347,7 @@ export const EditDatabase = ({ darkMode, setDarkMode }) => {
                                     ))}
                             </div>
 
-                            <EditTableButton
+                            <EditButtonDB
                                 name="Add"
                                 style="add"
                                 editClick={handleAdd}
@@ -407,20 +407,20 @@ export const EditDatabase = ({ darkMode, setDarkMode }) => {
                                             <TableCell className="edit-database__table-cell">
                                                 {editRow === row ? (
                                                     <div className="edit-database__table-buttons">
-                                                        <EditTableButton
+                                                        <EditButtonDB
                                                             name="Save"
                                                             style="save"
                                                             editClick={() => handleSave(row.id)}
                                                         />
 
-                                                        <EditTableButton
+                                                        <EditButtonDB
                                                             name="Delete"
                                                             style="delete"
                                                             editClick={() => handleDelete(row.id)}
                                                         />
                                                     </div>
                                                 ) : (
-                                                    <EditTableButton
+                                                    <EditButtonDB
                                                         name="Edit"
                                                         style="edit"
                                                         editClick={() => handleEdit(row)}
