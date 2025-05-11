@@ -1,4 +1,4 @@
-import { SpecsTable } from '../TablesDetails/components/SpecsTable/SpecsTable.jsx';
+import { SpecsTable } from '../SpecsTable/SpecsTable.jsx';
 
 export const MotherboardTable = ({ motherboardData }) => {
     const fields = [

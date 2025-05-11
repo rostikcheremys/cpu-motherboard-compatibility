@@ -17,8 +17,8 @@ import { Select } from "../../components/Select/Select.jsx";
 import { Footer } from "../../components/Footer/Footer.jsx";
 import { EditDialog } from "../../components/Dialog/EditDialog.jsx";
 import { ErrorDialog } from "../../components/Dialog/ErrorDialog.jsx";
-import { BackButton } from "../../components/BackButton/BackButton.jsx";
-import { EditTableButton } from "../../components/EditTableButton/EditTableButton.jsx";
+import { BackButton } from "../../components/Buttons/BackButton/BackButton.jsx";
+import { EditTableButton } from "../../components/Buttons/EditTableButton/EditTableButton.jsx";
 
 export const EditDatabase = ({ darkMode, setDarkMode }) => {
     const [tables, setTables] = useState([]);

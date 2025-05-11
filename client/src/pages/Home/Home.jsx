@@ -4,7 +4,7 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 import { Header } from "../../components/Header/Header.jsx";
-import { EditButton } from "../../components/EditButton/EditButton.jsx";
+import { EditButton } from "../../components/Buttons/EditButton/EditButton.jsx";
 import { FiltersSidebar } from "../../components/FiltersSidebar/FiltersSidebar.jsx";
 import { CompatibilityCheck } from "../../components/CompatibilityCheck/CompatibilityCheck.jsx";
 import { TablesDetails } from "../../components/TablesDetails/TablesDetails.jsx";
