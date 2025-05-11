@@ -7,7 +7,6 @@ import EditIcon from '@mui/icons-material/Edit';
 import SaveIcon from '@mui/icons-material/Save';
 import DeleteIcon from '@mui/icons-material/Delete';
 
-
 export const EditTableButton = ({ name, style, editClick }) => {
     const icons = {
         add: AddIcon,

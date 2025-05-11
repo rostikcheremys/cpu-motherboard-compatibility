@@ -1,96 +1,25 @@
-import './Table.css';
-
-import TableContainer from '@mui/material/TableContainer';
-import Paper from '@mui/material/Paper';
-import Table from '@mui/material/Table';
-import TableHead from "@mui/material/TableHead";
-import TableBody from '@mui/material/TableBody';
-import TableRow from '@mui/material/TableRow';
-import TableCell from '@mui/material/TableCell';
+import { SpecsTable } from '../TablesDetails/components/SpecsTable/SpecsTable.jsx';
 
 export const CPUTable = ({ cpuData }) => {
-    if (!cpuData) console.error('Error: No CPU data provided to CPUTable');
+    const fields = [
+        { label: 'Manufacturer', key: 'manufacturer' },
+        { label: 'Name', key: 'name' },
+        { label: 'Socket', key: 'socket' },
+        { label: 'Core Count', key: 'core_count' },
+        { label: 'Thread Count', key: 'thread_count' },
+        { label: 'Base Frequency', key: 'base_frequency', unit: 'GHz' },
+        { label: 'Max Frequency', key: 'max_frequency', unit: 'GHz' },
+        { label: 'Cache L3', key: 'cache_l3', unit: 'MB' },
+        { label: 'Architecture', key: 'architecture' },
+        { label: 'Family', key: 'family' },
+        { label: 'Generation', key: 'generation' },
+        { label: 'Has Integrated GPU', key: 'has_integrated_gpu', boolean: true },
+        { label: 'Unlocked Multiplier', key: 'unlocked_multiplier', boolean: true },
+        { label: 'Memory Type', key: 'memory_type' },
+        { label: 'Memory Max GB', key: 'memory_max_gb', unit: 'GB' },
+        { label: 'Process (nm)', key: 'process_nm', unit: 'nm' },
+        { label: 'TDP (Watts)', key: 'tdp_watts', unit: 'W' }
+    ];
 
-    return (
-        <TableContainer className="table-container" component={Paper}>
-            <Table>
-                <TableHead>
-                    <TableRow>
-                        <TableCell>Specifications</TableCell>
-                        <TableCell className="table-container_table_cell">CPU</TableCell>
-                    </TableRow>
-                </TableHead>
-                <TableBody>
-                    <TableRow>
-                        <TableCell>Manufacturer</TableCell>
-                        <TableCell className="table-container_table_cell">{cpuData.manufacturer}</TableCell>
-                    </TableRow>
-                    <TableRow>
-                        <TableCell>Name</TableCell>
-                        <TableCell className="table-container_table_cell">{cpuData.name}</TableCell>
-                    </TableRow>
-                    <TableRow>
-                        <TableCell>Socket</TableCell>
-                        <TableCell className="table-container_table_cell">{cpuData.socket}</TableCell>
-                    </TableRow>
-                    <TableRow>
-                        <TableCell>Core Count</TableCell>
-                        <TableCell className="table-container_table_cell">{cpuData.core_count}</TableCell>
-                    </TableRow>
-                    <TableRow>
-                        <TableCell>Thread Count</TableCell>
-                        <TableCell className="table-container_table_cell">{cpuData.thread_count}</TableCell>
-                    </TableRow>
-                    <TableRow>
-                        <TableCell>Base Frequency</TableCell>
-                        <TableCell className="table-container_table_cell">{cpuData.base_frequency} GHz</TableCell>
-                    </TableRow>
-                    <TableRow>
-                        <TableCell>Max Frequency</TableCell>
-                        <TableCell className="table-container_table_cell">{cpuData.max_frequency} GHz</TableCell>
-                    </TableRow>
-                    <TableRow>
-                        <TableCell>Cache L3</TableCell>
-                        <TableCell className="table-container_table_cell">{cpuData.cache_l3} MB</TableCell>
-                    </TableRow>
-                    <TableRow>
-                        <TableCell>Architecture</TableCell>
-                        <TableCell className="table-container_table_cell">{cpuData.architecture}</TableCell>
-                    </TableRow>
-                    <TableRow>
-                        <TableCell>Family</TableCell>
-                        <TableCell className="table-container_table_cell">{cpuData.family}</TableCell>
-                    </TableRow>
-                    <TableRow>
-                        <TableCell>Generation</TableCell>
-                        <TableCell className="table-container_table_cell">{cpuData.generation}</TableCell>
-                    </TableRow>
-                    <TableRow>
-                        <TableCell>Has Integrated GPU</TableCell>
-                        <TableCell className="table-container_table_cell">{cpuData.has_integrated_gpu ? 'Yes' : 'No'}</TableCell>
-                    </TableRow>
-                    <TableRow>
-                        <TableCell>Unlocked Multiplier</TableCell>
-                        <TableCell className="table-container_table_cell">{cpuData.unlocked_multiplier ? 'Yes' : 'No'}</TableCell>
-                    </TableRow>
-                    <TableRow>
-                        <TableCell>Memory Type</TableCell>
-                        <TableCell className="table-container_table_cell">{cpuData.memory_type}</TableCell>
-                    </TableRow>
-                    <TableRow>
-                        <TableCell>Memory Max GB</TableCell>
-                        <TableCell className="table-container_table_cell">{cpuData.memory_max_gb} GB</TableCell>
-                    </TableRow>
-                    <TableRow>
-                        <TableCell>Process (nm)</TableCell>
-                        <TableCell className="table-container_table_cell">{cpuData.process_nm} nm</TableCell>
-                    </TableRow>
-                    <TableRow>
-                        <TableCell>TDP (Watts)</TableCell>
-                        <TableCell className="table-container_table_cell">{cpuData.tdp_watts} W</TableCell>
-                    </TableRow>
-                </TableBody>
-            </Table>
-        </TableContainer>
-    );
+    return <SpecsTable title="CPU" data={cpuData} fields={fields} />;
 };

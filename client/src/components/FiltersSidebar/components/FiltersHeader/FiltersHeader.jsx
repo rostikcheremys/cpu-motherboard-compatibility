@@ -1,5 +1,4 @@
 import "./FiltersHeader.css"
-import "../../FiltersSidebar.css"
 
 import React from "react";
 

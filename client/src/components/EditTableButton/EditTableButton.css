@@ -18,7 +18,7 @@
 }
 
 .add {
-    background: #0B438C !important;
+    background: var(--background) !important;
 }
 
 .add:hover {

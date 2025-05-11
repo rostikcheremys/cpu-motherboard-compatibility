@@ -13,23 +13,35 @@ import {
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 
 export const FiltersAccordion = ({
-                             title,
-                             options,
-                             selectedValues,
-                             setSelectedValues,
-                             range,
-                             setRange,
-                             type,
-                             expandedAccordions,
-                             handleAccordionChange,
-                             handleCheckboxChange,
-                             handleBooleanChange,
-                             handleRangeChange,
-                             handleRangeChangeCommitted
-                         }) => {
+                              title,
+                              options,
+                              selectedValues,
+                              setSelectedValues,
+                              range,
+                              setRange,
+                              type,
+                              expandedAccordions,
+                              handleAccordionChange,
+                              handleCheckboxChange,
+                              handleBooleanChange,
+                              handleRangeChange,
+                              handleRangeChangeCommitted
+                          }) => {
     const isRange = type === "range";
     const isBoolean = type === "boolean";
     const isCheckbox = type === "checkbox";
+
+    const onCheckboxChange = (option) => {
+        handleCheckboxChange(setSelectedValues, selectedValues, option);
+    };
+
+    const onBooleanChange = (value) => {
+        handleBooleanChange(setSelectedValues, value);
+    };
+
+    const onRangeChange = (event, newValue) => {
+        handleRangeChange(setRange, newValue);
+    };
 
     return (
         <Accordion
@@ -48,7 +60,7 @@ export const FiltersAccordion = ({
                             control={
                                 <Checkbox
                                     checked={selectedValues.includes(option)}
-                                    onChange={() => handleCheckboxChange(setSelectedValues, selectedValues, option)}
+                                    onChange={() => onCheckboxChange(option)}
                                 />
                             }
                             label={option}
@@ -57,7 +69,7 @@ export const FiltersAccordion = ({
                 ) : isRange && range ? (
                     <Slider
                         value={range}
-                        onChange={handleRangeChange(setRange)}
+                        onChange={onRangeChange}
                         onChangeCommitted={handleRangeChangeCommitted}
                         valueLabelDisplay="auto"
                         min={options.min}
@@ -70,7 +82,7 @@ export const FiltersAccordion = ({
                             control={
                                 <Checkbox
                                     checked={selectedValues === true}
-                                    onChange={() => handleBooleanChange(setSelectedValues, true)}
+                                    onChange={() => onBooleanChange(true)}
                                 />
                             }
                             label="Yes"
@@ -79,7 +91,7 @@ export const FiltersAccordion = ({
                             control={
                                 <Checkbox
                                     checked={selectedValues === false}
-                                    onChange={() => handleBooleanChange(setSelectedValues, false)}
+                                    onChange={() => onBooleanChange(false)}
                                 />
                             }
                             label="No"

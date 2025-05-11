@@ -1,3 +1,4 @@
+
 .edit-database__container {
     display: flex;
     flex-direction: column;
@@ -85,19 +86,12 @@
 }
 
 .edit-database__table-buttons {
-   display: flex;
+    display: flex;
     justify-content: center;
     gap: 10px;
 }
 
 .edit-database__loading {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 100vh;
-}
-
-.edit-database__error {
     display: flex;
     justify-content: center;
     align-items: center;

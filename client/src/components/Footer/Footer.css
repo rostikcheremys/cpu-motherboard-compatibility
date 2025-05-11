@@ -6,7 +6,7 @@
     text-align: center;
     align-items: center;
     justify-content: center;
-    background: #0B438C;
+    background: var(--background);
     padding: 20px 0;
     position: relative;
 }

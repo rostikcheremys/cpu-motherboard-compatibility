@@ -1,4 +1,5 @@
 import { useMemo } from 'react';
+
 import { Switch, styled, useTheme } from '@mui/material';
 
 const sunIcon = encodeURIComponent(`

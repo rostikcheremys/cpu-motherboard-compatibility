@@ -1,14 +1,15 @@
 import "./CompatibilityCheck.css";
-import React, { useEffect, useState } from "react";
+
+import { useEffect, useState } from "react";
 import { FaCheckCircle, FaTimesCircle } from 'react-icons/fa';
+
 import { Select } from "../Select/Select.jsx";
-import {FiltersButton} from "../FiltersSidebar/components/FiltersButton/FiltersButton.jsx";
-import {EditButton} from "../EditButton/EditButton.jsx";
+import { FiltersButton } from "../FiltersSidebar/components/FiltersButton/FiltersButton.jsx";
 
 export const CompatibilityCheck = ({ setSelectedCpu, setSelectedMotherboard, filteredCpus, filteredMotherboards, setIsFilterOpen }) => {
     const [cpuOptions, setCpuOptions] = useState([]);
-    const [motherboardOptions, setMotherboardOptions] = useState([]);
     const [selectedCpu, setLocalSelectedCpu] = useState(null);
+    const [motherboardOptions, setMotherboardOptions] = useState([]);
     const [selectedMotherboard, setLocalSelectedMotherboard] = useState(null);
     const [isCompatible, setIsCompatible] = useState(null);
 

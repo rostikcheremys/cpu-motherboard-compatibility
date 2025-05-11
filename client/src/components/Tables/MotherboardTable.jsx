@@ -1,76 +1,20 @@
-import './Table.css';
-
-import TableContainer from '@mui/material/TableContainer';
-import Paper from '@mui/material/Paper';
-import Table from '@mui/material/Table';
-import TableHead from "@mui/material/TableHead";
-import TableBody from '@mui/material/TableBody';
-import TableRow from '@mui/material/TableRow';
-import TableCell from '@mui/material/TableCell';
+import { SpecsTable } from '../TablesDetails/components/SpecsTable/SpecsTable.jsx';
 
 export const MotherboardTable = ({ motherboardData }) => {
-    if (!motherboardData) console.error('Error: No motherboard data provided to MotherboardTable');
+    const fields = [
+        { label: 'Manufacturer', key: 'manufacturer' },
+        { label: 'Name', key: 'name' },
+        { label: 'Socket', key: 'socket' },
+        { label: 'Chipset', key: 'chipset' },
+        { label: 'Form Factor', key: 'form_factor' },
+        { label: 'Memory Type', key: 'memory_type' },
+        { label: 'RAM Slots', key: 'ram_slots' },
+        { label: 'RAM Channels', key: 'ram_channels' },
+        { label: 'Max RAM Capacity', key: 'max_ram_capacity', unit: 'GB' },
+        { label: 'Min RAM Frequency', key: 'min_ram_frequency', unit: 'MHz' },
+        { label: 'Max RAM Frequency', key: 'max_ram_frequency', unit: 'MHz' },
+        { label: 'XMP Support', key: 'xmp_support', boolean: true }
+    ];
 
-    return (
-        <TableContainer className="table-container" component={Paper}>
-            <Table>
-                <TableHead>
-                    <TableRow>
-                        <TableCell>Specifications</TableCell>
-                        <TableCell align="center">Motherboard</TableCell>
-                    </TableRow>
-                </TableHead>
-                <TableBody>
-                    <TableRow>
-                        <TableCell>Manufacturer</TableCell>
-                        <TableCell align="center">{motherboardData.manufacturer}</TableCell>
-                    </TableRow>
-                    <TableRow>
-                        <TableCell>Name</TableCell>
-                        <TableCell align="center">{motherboardData.name}</TableCell>
-                    </TableRow>
-                    <TableRow>
-                        <TableCell>Socket</TableCell>
-                        <TableCell align="center">{motherboardData.socket}</TableCell>
-                    </TableRow>
-                    <TableRow>
-                        <TableCell>Chipset</TableCell>
-                        <TableCell align="center">{motherboardData.chipset}</TableCell>
-                    </TableRow>
-                    <TableRow>
-                        <TableCell>Form Factor</TableCell>
-                        <TableCell align="center">{motherboardData.form_factor}</TableCell>
-                    </TableRow>
-                    <TableRow>
-                        <TableCell>Memory Type</TableCell>
-                        <TableCell align="center">{motherboardData.memory_type}</TableCell>
-                    </TableRow>
-                    <TableRow>
-                        <TableCell>RAM Slots</TableCell>
-                        <TableCell align="center">{motherboardData.ram_slots}</TableCell>
-                    </TableRow>
-                    <TableRow>
-                        <TableCell>RAM Channels</TableCell>
-                        <TableCell align="center">{motherboardData.ram_channels}</TableCell>
-                    </TableRow>
-                    <TableRow>
-                        <TableCell>Max RAM Capacity</TableCell>
-                        <TableCell align="center">{motherboardData.max_ram_capacity} GB</TableCell>
-                    </TableRow>
-                    <TableRow>
-                        <TableCell>Min RAM Frequency</TableCell>
-                        <TableCell align="center">{motherboardData.min_ram_frequency} MHz</TableCell>
-                    </TableRow>
-                    <TableRow>
-                        <TableCell>Max RAM Frequency</TableCell>
-                        <TableCell align="center">{motherboardData.max_ram_frequency} MHz</TableCell>
-                    </TableRow>
-                    <TableRow>
-                        <TableCell>XMP Support</TableCell>
-                        <TableCell align="center">{motherboardData.xmp_support ? 'Yes' : 'No'}</TableCell>
-                    </TableRow>
-                </TableBody>
-            </Table>
-        </TableContainer>
-    );
+    return <SpecsTable title="Motherboard" data={motherboardData} fields={fields} />;
 };

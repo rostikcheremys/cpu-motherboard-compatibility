@@ -7,15 +7,15 @@ import { Header } from "../../components/Header/Header.jsx";
 import { EditButton } from "../../components/EditButton/EditButton.jsx";
 import { FiltersSidebar } from "../../components/FiltersSidebar/FiltersSidebar.jsx";
 import { CompatibilityCheck } from "../../components/CompatibilityCheck/CompatibilityCheck.jsx";
-import { TableDetails } from "../../components/TableDetails/TableDetails.jsx";
+import { TablesDetails } from "../../components/TablesDetails/TablesDetails.jsx";
 import { Footer } from "../../components/Footer/Footer.jsx";
 
 export const Home = ({ darkMode, setDarkMode }) => {
     const [selectedCpu, setSelectedCpu] = useState(null);
     const [selectedMotherboard, setSelectedMotherboard] = useState(null);
-    const [isFilterOpen, setIsFilterOpen] = useState(false);
     const [filteredCpus, setFilteredCpus] = useState([]);
     const [filteredMotherboards, setFilteredMotherboards] = useState([]);
+    const [isFilterOpen, setIsFilterOpen] = useState(false);
 
     const navigate = useNavigate();
 
@@ -60,7 +60,7 @@ export const Home = ({ darkMode, setDarkMode }) => {
                     filteredMotherboards={filteredMotherboards}
                     setIsFilterOpen={setIsFilterOpen}
                 />
-                <TableDetails
+                <TablesDetails
                     selectedCpu={selectedCpu}
                     selectedMotherboard={selectedMotherboard}
                 />

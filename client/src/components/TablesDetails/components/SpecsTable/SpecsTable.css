@@ -1,10 +1,10 @@
-.table-container {
+.specs-table {
     overflow: hidden;
     margin: 20px 0;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
 }
 
-.table-container_table_cell {
+.specs-table_table_cell {
     text-align: center !important;
 }
 

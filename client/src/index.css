@@ -2,6 +2,7 @@
     --font-family: "Poppins", sans-serif;
     --second-family: "Roboto", sans-serif;
     --third-family: "Raleway", sans-serif;
+    --background: #0B438C;
 }
 
 * {
@@ -16,7 +17,7 @@ html, body {
 }
 
 .MuiTableHead-root {
-    background-color: #0B438C; !important;
+    background: var(--background) !important;
     color: white;
 }
 
@@ -35,5 +36,5 @@ html, body {
 }
 
 .MuiCircularProgress-root {
-    color: #0B438C !important;
+    background: var(--background) !important;
 }
