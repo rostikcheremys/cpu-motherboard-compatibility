@@ -1,0 +1,31 @@
+.text-fields-db {
+    display: flex;
+    justify-content: center;
+    width: 100%;
+    padding: 0 40px;
+}
+
+.text-fields-db__wrapper {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+}
+
+.text-fields-db__label {
+    margin-bottom: 10px;
+}
+
+.text-fields-db__container {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 10px;
+    margin-bottom: 20px;
+}
+
+.text-fields-db__text-field {
+    width: 250px !important;
+    margin: 0 !important;
+    flex-shrink: 0;
+}

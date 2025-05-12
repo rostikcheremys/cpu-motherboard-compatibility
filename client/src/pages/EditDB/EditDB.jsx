@@ -13,7 +13,6 @@ import TableCell from '@mui/material/TableCell';
 import { CircularProgress } from "@mui/material";
 
 import { Header } from "../../components/Header/Header.jsx";
-import { Select } from "../../components/Select/Select.jsx";
 import { Footer } from "../../components/Footer/Footer.jsx";
 import { EditDialog } from "../../components/Dialog/EditDialog.jsx";
 import { ErrorDialog } from "../../components/Dialog/ErrorDialog.jsx";
@@ -22,6 +21,8 @@ import { EditButtonDB } from "../../components/Buttons/EditButtonDB/EditButtonDB
 
 
 import { SelectDB } from "../../components/SelectDB/SelectDB.jsx";
+import { TextFieldsDB } from "../../components/TextFieldsDB/TextFieldsDB.jsx";
+import {TableDB} from "../../components/TableDB/TableDB.jsx";
 
 export const EditDB = ({ darkMode, setDarkMode }) => {
     const [tables, setTables] = useState([]);
@@ -315,14 +316,14 @@ export const EditDB = ({ darkMode, setDarkMode }) => {
     };
 
     if (loading) return (
-        <div className="edit-database__loading">
+        <div className="edit-db__loading">
             <CircularProgress />
         </div>
     );
 
     return (
-        <div className="edit-database__container">
-            <div className="edit-database__content">
+        <div className="edit-db">
+            <div className="edit-db__container">
                 <Header
                     darkMode={darkMode}
                     toggleDarkMode={toggleDarkMode}
@@ -330,136 +331,35 @@ export const EditDB = ({ darkMode, setDarkMode }) => {
 
                 <BackButton onBack={handleBack} />
 
-                <SelectDB options={tables} onChange={handleTableChange}/>
+                <SelectDB
+                    options={tables}
+                    onChange={handleTableChange}
+                />
 
-                <div className="edit-database__text-fields-container">
-                    {selectedTable && columns.length > 0 && (
-                        <div className="edit-database__text-fields-wrapper">
-                            <h3 className="edit-database__text-fields-label">Add new record:</h3>
-                            <div className="edit-database__text-fields">
-                                {columns
-                                    .filter(column => column !== 'id')
-                                    .map((column) => (
-                                        <TextField
-                                            className="edit-database__text-field-add"
-                                            variant="outlined"
-                                            key={column}
-                                            label={column}
-                                            value={newRowForAdd[column] || ''}
-                                            onChange={(e) => {
-                                                setNewRowForAdd({...newRowForAdd, [column]: e.target.value});
-                                                setAddErrors(prev => {
-                                                    const newErrors = { ...prev };
-                                                    delete newErrors[column];
-                                                    return newErrors;
-                                                });
-                                            }}
-                                            error={!!addErrors[column]}
-                                            helperText={addErrors[column]}
-                                        />
-                                    ))}
-                            </div>
+                <TextFieldsDB
+                    selectedTable={selectedTable}
+                    columns={columns}
+                    newRowForAdd={newRowForAdd}
+                    setNewRowForAdd={setNewRowForAdd}
+                    addErrors={addErrors}
+                    setAddErrors={setAddErrors}
+                    handleAdd={handleAdd}
+                />
 
-                            <EditButtonDB
-                                name="Add"
-                                style="add"
-                                editClick={handleAdd}
-                            />
-                        </div>
-                    )}
-                </div>
-
-                {selectedTable && tableData.length > 0 && (
-                    <div className="edit-database__table-container">
-                        <Paper className="edit-database__paper">
-                            <Table className="edit-database__table">
-                                <TableHead>
-                                    <TableRow>
-                                        {columns.map((column) => (
-                                            <TableCell className="edit-database__table-cell">
-                                                {column}
-                                            </TableCell>
-                                        ))}
-                                        <TableCell className="edit-database__table-cell">
-                                            Actions
-                                        </TableCell>
-                                    </TableRow>
-                                </TableHead>
-                                <TableBody>
-                                    {tableData.map((row) => (
-                                        <TableRow key={row.id || row.name}>
-                                            {columns.map((column) => (
-                                                <TableCell key={column} className="edit-database__table-cell">
-                                                    {editRow === row ? (
-                                                        column !== 'id' ? (
-                                                            <div>
-                                                                <TextField
-                                                                    className="edit-database__text-field"
-                                                                    variant="outlined"
-                                                                    value={newRowForEdit[column] != null ? newRowForEdit[column].toString() : ''}
-                                                                    onChange={(e) => {
-                                                                        setNewRowForEdit({...newRowForEdit, [column]: e.target.value });
-                                                                        setEditErrors(prev => {
-                                                                            const newEditErrors = { ...prev };
-                                                                            delete newEditErrors[column];
-                                                                            return newEditErrors;
-                                                                        });
-                                                                    }}
-                                                                    error={!!editErrors[column]}
-                                                                    helperText={editErrors[column]}
-                                                                />
-                                                            </div>
-                                                        ) : (
-                                                            row[column] != null ? row[column].toString() : 'N/A'
-                                                        )
-                                                    ) : (
-                                                        row[column] != null ? row[column].toString() : 'N/A'
-                                                    )}
-                                                </TableCell>
-                                            ))}
-                                            <TableCell className="edit-database__table-cell">
-                                                {editRow === row ? (
-                                                    <div className="edit-database__table-buttons">
-                                                        <EditButtonDB
-                                                            name="Save"
-                                                            style="save"
-                                                            editClick={() => handleSave(row.id)}
-                                                        />
-
-                                                        <EditButtonDB
-                                                            name="Cancel"
-                                                            style="cancel"
-                                                            editClick={handleCancel}
-                                                        />
-                                                    </div>
-                                                    ) : (
-                                                    <div className="edit-database__table-buttons">
-                                                        <EditButtonDB
-                                                            name="Edit"
-                                                            style="edit"
-                                                            editClick={() => handleEdit(row)}
-                                                         />
-
-                                                        <EditButtonDB
-                                                            name="Delete"
-                                                            style="delete"
-                                                            editClick={() => handleDelete(row.id)}
-                                                        />
-                                                    </div>
-                                                )}
-                                            </TableCell>
-                                        </TableRow>
-                                    ))}
-                                </TableBody>
-                            </Table>
-                        </Paper>
-                    </div>
-                )}
-                {selectedTable && tableData.length === 0 && (
-                    <div className="edit-database__hint">
-                        No data available for this table!
-                    </div>
-                )}
+                <TableDB
+                    selectedTable={selectedTable}
+                    tableData={tableData}
+                    columns={columns}
+                    editRow={editRow}
+                    newRowForEdit={newRowForAdd}
+                    setNewRowForEdit={setNewRowForAdd}
+                    editErrors={editErrors}
+                    setEditErrors={setAddErrors}
+                    handleSave={handleSave}
+                    handleCancel={handleCancel}
+                    handleEdit={handleEdit}
+                    handleDelete={handleDelete}
+                />
             </div>
 
             <EditDialog

@@ -1,0 +1,54 @@
+.table-db {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    padding: 0 40px;
+    box-sizing: border-box;
+    margin: 50px 0 40px;
+}
+
+.table-db__container {
+    width: 100%;
+}
+
+.table-db__paper {
+    width: 100%;
+    overflow-x: auto;
+    box-sizing: border-box;
+}
+
+.table-db__table-cell {
+    text-align: center !important;
+}
+
+.table-db__text-fields {
+    width: 200px !important;
+}
+
+.table-db__buttons {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+}
+
+.table-db__hint {
+    font-family: var(--font-family);
+    font-weight: 300;
+    line-height: 133%;
+    font-size: 14px;
+    padding: 0 0 5px 10px;
+}
+
+@media (max-width: 930px) {
+    .table-db {
+        width: 100%;
+        padding: 0 40px;
+    }
+}
+
+@media (max-width: 480px) {
+    .table-db {
+        width: 480px;
+    }
+}
