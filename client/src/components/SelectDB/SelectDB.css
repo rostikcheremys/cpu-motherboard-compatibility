@@ -1,0 +1,11 @@
+.select-db {
+    margin: 20px 0 40px;
+}
+
+.select-db__hint {
+    font-family: var(--font-family);
+    font-weight: 300;
+    line-height: 133%;
+    font-size: 14px;
+    padding: 0 0 5px 10px;
+}

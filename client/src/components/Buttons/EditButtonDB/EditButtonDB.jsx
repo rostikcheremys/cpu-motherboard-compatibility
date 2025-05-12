@@ -6,6 +6,7 @@ import AddIcon from '@mui/icons-material/Add'
 import EditIcon from '@mui/icons-material/Edit';
 import SaveIcon from '@mui/icons-material/Save';
 import DeleteIcon from '@mui/icons-material/Delete';
+import CancelIcon from '@mui/icons-material/Cancel';
 
 export const EditButtonDB = ({ name, style, editClick }) => {
     const icons = {
@@ -13,6 +14,7 @@ export const EditButtonDB = ({ name, style, editClick }) => {
         edit: EditIcon,
         save: SaveIcon,
         delete: DeleteIcon,
+        cancel: CancelIcon
     };
 
     const IconComponent = icons[style];

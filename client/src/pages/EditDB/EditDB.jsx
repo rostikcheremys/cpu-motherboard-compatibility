@@ -20,6 +20,9 @@ import { ErrorDialog } from "../../components/Dialog/ErrorDialog.jsx";
 import { BackButton } from "../../components/Buttons/BackButton/BackButton.jsx";
 import { EditButtonDB } from "../../components/Buttons/EditButtonDB/EditButtonDB.jsx";
 
+
+import { SelectDB } from "../../components/SelectDB/SelectDB.jsx";
+
 export const EditDB = ({ darkMode, setDarkMode }) => {
     const [tables, setTables] = useState([]);
     const [selectedTable, setSelectedTable] = useState(null);
@@ -295,6 +298,22 @@ export const EditDB = ({ darkMode, setDarkMode }) => {
         );
     };
 
+    const handleCancel = () => {
+        openDialog(
+            () => {
+                setEditRow(null);
+                setNewRowForEdit({});
+                setEditErrors({});
+            },
+            {
+                title: 'Confirm Cancel',
+                description: 'Are you sure you want to cancel editing? Changes will be discarded.',
+                confirmText: 'Yes',
+                cancelText: 'No',
+            }
+        );
+    };
+
     if (loading) return (
         <div className="edit-database__loading">
             <CircularProgress />
@@ -311,13 +330,7 @@ export const EditDB = ({ darkMode, setDarkMode }) => {
 
                 <BackButton onBack={handleBack} />
 
-                <div className="edit-database__tables-select">
-                    <h5 className="edit-database__hint">Select table:</h5>
-                    <Select
-                        options={tables}
-                        onChange={handleTableChange}
-                    />
-                </div>
+                <SelectDB options={tables} onChange={handleTableChange}/>
 
                 <div className="edit-database__text-fields-container">
                     {selectedTable && columns.length > 0 && (
@@ -414,17 +427,25 @@ export const EditDB = ({ darkMode, setDarkMode }) => {
                                                         />
 
                                                         <EditButtonDB
+                                                            name="Cancel"
+                                                            style="cancel"
+                                                            editClick={handleCancel}
+                                                        />
+                                                    </div>
+                                                    ) : (
+                                                    <div className="edit-database__table-buttons">
+                                                        <EditButtonDB
+                                                            name="Edit"
+                                                            style="edit"
+                                                            editClick={() => handleEdit(row)}
+                                                         />
+
+                                                        <EditButtonDB
                                                             name="Delete"
                                                             style="delete"
                                                             editClick={() => handleDelete(row.id)}
                                                         />
                                                     </div>
-                                                ) : (
-                                                    <EditButtonDB
-                                                        name="Edit"
-                                                        style="edit"
-                                                        editClick={() => handleEdit(row)}
-                                                    />
                                                 )}
                                             </TableCell>
                                         </TableRow>

@@ -16,17 +16,7 @@
     flex-grow: 1;
 }
 
-.edit-database__tables-select {
-    margin: 20px 0 40px;
-}
 
-.edit-database__hint {
-    font-family: var(--font-family);
-    font-weight: 300;
-    line-height: 133%;
-    font-size: 14px;
-    padding: 0 0 5px 10px;
-}
 
 .edit-database__text-fields-container {
     display: flex;
@@ -109,4 +99,19 @@
     .edit-database__table-container {
         width: 480px;
     }
+}
+
+
+
+
+.edit-database__tables-select {
+    margin: 20px 0 40px;
+}
+
+.edit-database__hint {
+    font-family: var(--font-family);
+    font-weight: 300;
+    line-height: 133%;
+    font-size: 14px;
+    padding: 0 0 5px 10px;
 }

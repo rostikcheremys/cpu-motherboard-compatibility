@@ -48,3 +48,11 @@
 .delete:hover {
     background: #ff0000 !important;
 }
+
+.cancel {
+    background: #197dfa !important;
+}
+
+.cancel:hover {
+    background: #16b6fa !important;
+}
