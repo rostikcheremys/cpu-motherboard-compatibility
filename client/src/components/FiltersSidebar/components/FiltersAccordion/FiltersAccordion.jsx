@@ -1,5 +1,3 @@
-import React from "react";
-
 import {
     Accordion,
     AccordionSummary,
@@ -7,26 +5,27 @@ import {
     Slider,
     Checkbox,
     AccordionDetails,
-    FormControlLabel
+    FormControlLabel,
 } from "@mui/material";
 
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
+import React from "react";
 
 export const FiltersAccordion = ({
-                              title,
-                              options,
-                              selectedValues,
-                              setSelectedValues,
-                              range,
-                              setRange,
-                              type,
-                              expandedAccordions,
-                              handleAccordionChange,
-                              handleCheckboxChange,
-                              handleBooleanChange,
-                              handleRangeChange,
-                              handleRangeChangeCommitted
-                          }) => {
+                                     title,
+                                     options,
+                                     selectedValues,
+                                     setSelectedValues,
+                                     range,
+                                     setRange,
+                                     type,
+                                     expandedAccordions,
+                                     handleAccordionChange,
+                                     handleCheckboxChange,
+                                     handleBooleanChange,
+                                     handleRangeChange,
+                                     handleRangeChangeCommitted,
+                                 }) => {
     const isRange = type === "range";
     const isBoolean = type === "boolean";
     const isCheckbox = type === "checkbox";
@@ -40,8 +39,19 @@ export const FiltersAccordion = ({
     };
 
     const onRangeChange = (event, newValue) => {
-        handleRangeChange(setRange, newValue);
+        handleRangeChange(setRange)(event, newValue);
     };
+
+    const validRange = Array.isArray(range) && range.length === 2 && range.every((val) => typeof val === "number")
+        ? range
+        : [options?.min || 0, options?.max || 100];
+
+    const min = isRange ? (options?.min ?? 0) : undefined;
+    const max = isRange ? (options?.max ?? 100) : undefined;
+    const step = title === "TDP (Watts)" ? 5 : 1;
+
+    console.log(`FiltersAccordion (${title}) - Range value:`, validRange);
+    console.log(`FiltersAccordion (${title}) - Options:`, options);
 
     return (
         <Accordion
@@ -53,7 +63,7 @@ export const FiltersAccordion = ({
                 <Typography>{title}</Typography>
             </AccordionSummary>
             <AccordionDetails>
-                {isCheckbox && options.length > 0 ? (
+                {isCheckbox && Array.isArray(options) && options.length > 0 ? (
                     options.map((option) => (
                         <FormControlLabel
                             key={option}
@@ -63,18 +73,18 @@ export const FiltersAccordion = ({
                                     onChange={() => onCheckboxChange(option)}
                                 />
                             }
-                            label={option}
+                            label={option.toString()}
                         />
                     ))
-                ) : isRange && range ? (
+                ) : isRange && min !== undefined && max !== undefined ? (
                     <Slider
-                        value={range}
+                        value={validRange}
                         onChange={onRangeChange}
                         onChangeCommitted={handleRangeChangeCommitted}
                         valueLabelDisplay="auto"
-                        min={options.min}
-                        max={options.max}
-                        step={type === "TDP (Watts)" ? 5 : 1}
+                        min={min}
+                        max={max}
+                        step={step}
                     />
                 ) : isBoolean ? (
                     <>
