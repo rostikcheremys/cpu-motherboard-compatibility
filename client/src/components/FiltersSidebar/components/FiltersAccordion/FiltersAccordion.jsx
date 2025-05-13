@@ -50,9 +50,6 @@ export const FiltersAccordion = ({
     const max = isRange ? (options?.max ?? 100) : undefined;
     const step = title === "TDP (Watts)" ? 5 : 1;
 
-    console.log(`FiltersAccordion (${title}) - Range value:`, validRange);
-    console.log(`FiltersAccordion (${title}) - Options:`, options);
-
     return (
         <Accordion
             className="filters-sidebar__accordion"

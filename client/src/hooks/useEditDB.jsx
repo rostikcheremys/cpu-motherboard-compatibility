@@ -264,7 +264,7 @@ export const useEditDB = () => {
             () => navigate("/"),
             {
                 title: 'Confirm Exit',
-                description: 'Are you sure you want to go back? Unsaved changes will be lost.',
+                description: 'Are you sure you want to go back? Unsaved changes will be lost!',
                 confirmText: 'Yes',
                 cancelText: 'No',
             }
